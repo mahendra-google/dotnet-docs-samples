@@ -41,6 +41,9 @@ public class ListSoftDeletedObjectsTest
         _fixture.Client.DeleteObject(bucketName, objectName);
         _fixture.Client.DeleteObject(bucketName, testObjectName);
         var objects = listSoftDeletedObjects.ListSoftDeletedObjects(bucketName);
-        Assert.All(objects, c => Assert.Contains(objectName, c.Name) && Assert.Contains(testObjectName, c.Name));
+        Assert.Multiple(
+            () => Assert.Contains(objects, obj => obj.Name == objectName),
+            () => Assert.Contains(objects, obj => obj.Name == testObjectName)
+        );
     }
 }
