@@ -30,7 +30,10 @@ public class BucketSetSoftDeletePolicyTest
         BucketSetSoftDeletePolicySample bucketSetSoftDeletePolicy = new BucketSetSoftDeletePolicySample();
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: true, registerForDeletion: true);
-        var bucket = bucketSetSoftDeletePolicy.BucketSetSoftDeletePolicy(bucketName);
-        Assert.Equal("864000", bucket.SoftDeletePolicy.RetentionDurationSeconds.ToString());
+        long retentionDuration = 10;
+        // Set soft-delete policy for the bucket.
+        var bucket = bucketSetSoftDeletePolicy.BucketSetSoftDeletePolicy(bucketName, retentionDuration);
+        long retentionDurationInSeconds = retentionDuration * 24 * 60 * 60;
+        Assert.Equal(bucket.SoftDeletePolicy.RetentionDurationSeconds, retentionDurationInSeconds);
     }
 }
