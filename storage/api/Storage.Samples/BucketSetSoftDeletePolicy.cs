@@ -29,9 +29,17 @@ public class BucketSetSoftDeletePolicySample
     {
         var storage = StorageClient.Create();
         var bucket = storage.GetBucket(bucketName);
-        long retentionDurationInSeconds = retentionDuration * 24 * 60 * 60 ;
-        bucket.SoftDeletePolicy = new Bucket.SoftDeletePolicyData { RetentionDurationSeconds = retentionDurationInSeconds };
-        bucket = storage.UpdateBucket(bucket);
+        long retentionDurationInSeconds = retentionDuration * (24 * 60 * 60);
+        if (retentionDuration < 7 || retentionDuration > 90)
+        {
+            Console.WriteLine($"Soft Delete Policy for the {bucketName} must have a retention duration between 7 days and 90 days");
+            return bucket;
+        }
+        else
+        {
+            bucket.SoftDeletePolicy = new Bucket.SoftDeletePolicyData { RetentionDurationSeconds = retentionDurationInSeconds };
+            bucket = storage.UpdateBucket(bucket);
+        }
         Console.WriteLine($"Soft Delete Policy for the {bucketName} is set to the {retentionDuration} days retention duration");
         return bucket;
     }

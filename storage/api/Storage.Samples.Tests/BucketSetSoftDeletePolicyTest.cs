@@ -33,7 +33,7 @@ public class BucketSetSoftDeletePolicyTest
         long retentionDuration = 10;
         // Set soft-delete policy for the bucket.
         var bucket = bucketSetSoftDeletePolicy.BucketSetSoftDeletePolicy(bucketName, retentionDuration);
-        long retentionDurationInSeconds = retentionDuration * 24 * 60 * 60;
+        long retentionDurationInSeconds = retentionDuration * (24 * 60 * 60);
         Assert.Equal(bucket.SoftDeletePolicy.RetentionDurationSeconds, retentionDurationInSeconds);
     }
 }
