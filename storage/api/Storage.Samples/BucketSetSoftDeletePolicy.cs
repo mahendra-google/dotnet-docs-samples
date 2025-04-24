@@ -24,8 +24,9 @@ public class BucketSetSoftDeletePolicySample
     /// Set soft delete policy for the bucket.
     /// </summary>
     /// <param name="bucketName">The name of the bucket to set soft-delete policy for.</param>
+    /// <param name="retentionDuration">The retention duration to set soft-delete policy for the bucket.</param>
     public Bucket BucketSetSoftDeletePolicy(string bucketName = "your-unique-bucket-name",
-        long retentionDuration = 10)
+        int retentionDuration = 10)
     {
         var storage = StorageClient.Create();
         var bucket = storage.GetBucket(bucketName);
