@@ -16,6 +16,7 @@
 
 using Google.Cloud.Storage.V1;
 using System;
+
 public class RestoreSoftDeletedObjectSample
 {
     /// <summary>
