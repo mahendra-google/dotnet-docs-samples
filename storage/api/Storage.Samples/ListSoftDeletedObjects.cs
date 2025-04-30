@@ -23,7 +23,7 @@ public class ListSoftDeletedObjectsSample
     /// <summary>
     /// List soft deleted objects.
     /// </summary>
-    /// <param name="bucketName">The name of the bucket to list soft-deleted objects from.</param>
+    /// <param name="bucketName">The name of the bucket.</param>
     public IEnumerable<Google.Apis.Storage.v1.Data.Object> ListSoftDeletedObjects(string bucketName = "your-unique-bucket-name")
     {
         var storage = StorageClient.Create();
@@ -31,7 +31,7 @@ public class ListSoftDeletedObjectsSample
         Console.WriteLine("Soft Deleted Objects are as follows:");
         foreach (var obj in objects)
         {
-            Console.WriteLine(obj.Name);
+            Console.WriteLine($"Name: {obj.Name}");
         }
         return objects;
     }

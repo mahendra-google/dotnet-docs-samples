@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -37,9 +36,9 @@ public class ListSoftDeletedVersionOfObjectTest
         GetMetadataSample getMetadataSample = new GetMetadataSample();
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var objectName = Guid.NewGuid().ToString();
-        var objectContents = Guid.NewGuid().ToString();
-        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectName, objectContents);
+        var objectName = _fixture.GenerateName();
+        var objectContent = _fixture.GenerateContent();
+        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectName, objectContent);
         while (i >= 0)
         {
             var objectMetaData = getMetadataSample.GetMetadata(bucketName, objectName);

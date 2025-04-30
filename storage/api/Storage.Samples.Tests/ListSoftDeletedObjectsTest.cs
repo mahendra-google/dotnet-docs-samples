@@ -32,18 +32,18 @@ public class ListSoftDeletedObjectsTest
         UploadObjectFromMemorySample uploadObjectFromMemory = new UploadObjectFromMemorySample();
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var objectName = Guid.NewGuid().ToString();
-        var objectContents = Guid.NewGuid().ToString();
-        var testObjectName = Guid.NewGuid().ToString();
-        var testObjectContents = Guid.NewGuid().ToString();
-        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectName, objectContents);
-        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, testObjectName, testObjectContents);
-        _fixture.Client.DeleteObject(bucketName, objectName);
-        _fixture.Client.DeleteObject(bucketName, testObjectName);
+        var objectNameOne = _fixture.GenerateName();
+        var objectOneContent = _fixture.GenerateContent();
+        var objectNameTwo = _fixture.GenerateName();
+        var objectTwoContent = _fixture.GenerateContent();
+        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectNameOne, objectOneContent);
+        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectNameTwo, objectTwoContent);
+        _fixture.Client.DeleteObject(bucketName, objectNameOne);
+        _fixture.Client.DeleteObject(bucketName, objectNameTwo);
         var objects = listSoftDeletedObjects.ListSoftDeletedObjects(bucketName);
         Assert.Multiple(
-            () => Assert.Contains(objects, obj => obj.Name == objectName),
-            () => Assert.Contains(objects, obj => obj.Name == testObjectName)
+            () => Assert.Contains(objects, obj => obj.Name == objectNameOne),
+            () => Assert.Contains(objects, obj => obj.Name == objectNameTwo)
         );
     }
 }

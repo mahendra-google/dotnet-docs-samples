@@ -23,15 +23,15 @@ public class BucketSetSoftDeletePolicySample
     /// <summary>
     /// Set soft delete policy for the bucket.
     /// </summary>
-    /// <param name="bucketName">The name of the bucket to set soft-delete policy for.</param>
-    /// <param name="retentionDuration">The retention duration to set soft-delete policy for the bucket.</param>
+    /// <param name="bucketName">The name of the bucket.</param>
+    /// <param name="retentionDurationInDays">The retention duration in days to set soft-delete policy for the bucket.</param>
     public Bucket BucketSetSoftDeletePolicy(string bucketName = "your-unique-bucket-name",
-        int retentionDuration = 10)
+        int retentionDurationInDays = 10)
     {
         var storage = StorageClient.Create();
         var bucket = storage.GetBucket(bucketName);
-        long retentionDurationInSeconds = retentionDuration * (24 * 60 * 60);
-        if (retentionDuration < 7 || retentionDuration > 90)
+        long retentionDurationInSeconds = (long) TimeSpan.FromDays(retentionDurationInDays).TotalSeconds;
+        if (retentionDurationInDays < 7 || retentionDurationInDays > 90)
         {
             Console.WriteLine($"Soft Delete Policy for the {bucketName} must have a retention duration between 7 days and 90 days");
             return bucket;
@@ -41,7 +41,7 @@ public class BucketSetSoftDeletePolicySample
             bucket.SoftDeletePolicy = new Bucket.SoftDeletePolicyData { RetentionDurationSeconds = retentionDurationInSeconds };
             bucket = storage.UpdateBucket(bucket);
         }
-        Console.WriteLine($"Soft Delete Policy for the {bucketName} is set to the {retentionDuration} days retention duration");
+        Console.WriteLine($"Soft Delete Policy for the {bucketName} is set to the {retentionDurationInDays} days retention duration");
         return bucket;
     }
 }

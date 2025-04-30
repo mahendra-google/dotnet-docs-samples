@@ -33,9 +33,9 @@ public class RestoreSoftDeletedObjectTest
         GetMetadataSample getMetadataSample = new GetMetadataSample();
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: true, registerForDeletion: true);
-        var objectName = Guid.NewGuid().ToString();
-        var objectContents = Guid.NewGuid().ToString();
-        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectName, objectContents);
+        var objectName = _fixture.GenerateName();
+        var objectContent = _fixture.GenerateContent();
+        uploadObjectFromMemory.UploadObjectFromMemory(bucketName, objectName, objectContent);
         var objectMetaData = getMetadataSample.GetMetadata(bucketName, objectName);
         _fixture.Client.DeleteObject(bucketName, objectName);
         var restoredObject = restoreSoftDeletedObjectSample.RestoreSoftDeletedObject(bucketName, objectName, objectMetaData.Generation.Value);

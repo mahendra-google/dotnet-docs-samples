@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
@@ -30,11 +31,11 @@ public class BucketSetSoftDeletePolicyTest
         BucketSetSoftDeletePolicySample bucketSetSoftDeletePolicy = new BucketSetSoftDeletePolicySample();
         var bucketName = _fixture.GenerateBucketName();
         var bucketPreSetSoftDeletePolicy = _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: true, registerForDeletion: true);
-        int retentionDuration = 10;
-        long retentionDurationInSeconds = retentionDuration * (24 * 60 * 60);
+        int retentionDurationInDays = 10;
+        long retentionDurationInSeconds = (long) TimeSpan.FromDays(retentionDurationInDays).TotalSeconds;
         Assert.NotEqual(bucketPreSetSoftDeletePolicy.SoftDeletePolicy.RetentionDurationSeconds, retentionDurationInSeconds);
         // Set soft-delete policy for the bucket.
-        var bucketPostSetSoftDeletePolicy = bucketSetSoftDeletePolicy.BucketSetSoftDeletePolicy(bucketName, retentionDuration);
+        var bucketPostSetSoftDeletePolicy = bucketSetSoftDeletePolicy.BucketSetSoftDeletePolicy(bucketName, retentionDurationInDays);
         Assert.Equal(bucketPostSetSoftDeletePolicy.SoftDeletePolicy.RetentionDurationSeconds, retentionDurationInSeconds);
     }
 }

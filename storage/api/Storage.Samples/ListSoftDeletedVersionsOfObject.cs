@@ -23,14 +23,14 @@ public class ListSoftDeletedVersionOfObjectSample
     /// <summary>
     /// List soft deleted versions of the object.
     /// </summary>
-    /// <param name="bucketName">The name of the bucket to list soft-deleted versions of the object from.</param>
-    /// <param name="objectName">The name of the soft-deleted object to view all the versions of.</param>
+    /// <param name="bucketName">The name of the bucket.</param>
+    /// <param name="objectName">The name of the soft-deleted object.</param>
     public IEnumerable<Google.Apis.Storage.v1.Data.Object> ListSoftDeletedVersionOfObject(string bucketName = "your-unique-bucket-name",
         string objectName = "your-object-name")
     {
         var storage = StorageClient.Create();
         var objects = storage.ListObjects(bucketName, null, new ListObjectsOptions { SoftDeletedOnly = true, MatchGlob = objectName });
-        Console.WriteLine("Soft Deleted Versions of the Object with the Name are as follows:");
+        Console.WriteLine("Soft Deleted Versions of the Object with the Name and Versions are as follows:");
         foreach (var obj in objects)
         {
             Console.WriteLine($"Name: {obj.Name} and Version : {obj.Generation}");

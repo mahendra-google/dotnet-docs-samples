@@ -23,14 +23,14 @@ public class BucketDisableSoftDeletePolicySample
     /// <summary>
     /// Disable soft delete policy for the bucket.
     /// </summary>
-    /// <param name="bucketName">The name of the bucket to disable soft-delete policy for.</param>
-    /// <param name="retentionDuration">The retention duration to disable soft-delete policy for the bucket.</param>
+    /// <param name="bucketName">The name of the bucket.</param>
+    /// <param name="retentionDurationInDay">The retention duration to disable soft-delete policy for the bucket.</param>
     public Bucket BucketDisableSoftDeletePolicy(string bucketName = "your-unique-bucket-name",
-        int retentionDuration = 0)
+        int retentionDurationInDay = 0)
     {
         var storage = StorageClient.Create();
         var bucket = storage.GetBucket(bucketName);
-        long retentionDurationInSeconds = retentionDuration * (24 * 60 * 60);
+        long retentionDurationInSeconds = (long) TimeSpan.FromDays(retentionDurationInDay).TotalSeconds;
         bucket.SoftDeletePolicy = new Bucket.SoftDeletePolicyData { RetentionDurationSeconds = retentionDurationInSeconds };
         bucket = storage.UpdateBucket(bucket);
         Console.WriteLine($"Soft Delete Policy for the {bucketName} is disabled");

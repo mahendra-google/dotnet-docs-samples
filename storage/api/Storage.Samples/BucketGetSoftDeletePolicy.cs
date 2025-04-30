@@ -23,7 +23,7 @@ public class BucketGetSoftDeletePolicySample
     /// <summary>
     /// Get soft delete policy of the bucket.
     /// </summary>
-    /// <param name="bucketName">The name of the bucket to get soft-delete policy of.</param>
+    /// <param name="bucketName">The name of the bucket.</param>
     public Bucket BucketGetSoftDeletePolicy(string bucketName = "your-unique-bucket-name")
     {
         var storage = StorageClient.Create();
