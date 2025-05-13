@@ -4,9 +4,9 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "testutil", "..\..\testutil\testutil.csproj", "{D350336B-82D0-4A6B-A46E-58A8A20FD256}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageBatchOperations.Samples", "StorageBatchOperations.Sample\StorageBatchOperations.Samples.csproj", "{11EFF973-23FE-41B6-82D5-E8A0BA79F21C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageBatchOperations.Samples", "StorageBatchOperations.Samples\StorageBatchOperations.Samples.csproj", "{11EFF973-23FE-41B6-82D5-E8A0BA79F21C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageBatchOperations.Samples.Tests", "StorageBatchOperations.Sample.Tests\StorageBatchOperations.Samples.Tests.csproj", "{2BB74746-319D-465B-AAD5-C4430322501E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageBatchOperations.Samples.Tests", "StorageBatchOperations.Samples.Tests\StorageBatchOperations.Samples.Tests.csproj", "{2BB74746-319D-465B-AAD5-C4430322501E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

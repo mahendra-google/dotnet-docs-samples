@@ -32,15 +32,11 @@ public class CreateJobSample
         // Snippet: CreateJob(CreateJobRequest, CallSettings)
         // Create client
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
-        // Initialize request argument(s)
-        CreateJobRequest request = new CreateJobRequest
-        {
-            Parent = ParentAsLocationName,
-            Job = new Job() { Name = "jobname one" },
-            RequestId = "jobname"
-        };
+        string parent = ParentAsLocationName;
+        Job job = new Job();
+        string jobId = "job123";
         // Make the request
-        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
+        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(parent, job, jobId);
 
         // Poll until the returned long-running operation is complete
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
@@ -57,9 +53,6 @@ public class CreateJobSample
             // If it has completed, then access the result
             Job retrievedResult = retrievedResponse.Result;
         }
-        // End snippet
-        
     }
 }
 // [END storage_batch_create_job]
-

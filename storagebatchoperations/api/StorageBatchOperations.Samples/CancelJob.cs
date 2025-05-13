@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
-// [START storage_batch_delete_job]
+// [START storage_batch_cancel_job]
 
 using Google.Api.Gax;
 using Google.Api.Gax.ResourceNames;
@@ -24,24 +24,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DeleteJobSample
+public class CancelJobSample
 {
     /// <summary>Snippet for CreateJob</summary>
-    public void DeleteJob(string job = "projects/[PROJECT]/locations/[LOCATION]")
+    public void CancelJob(string job = "projects/[PROJECT]/locations/[LOCATION]")
     {
-        // Snippet: DeleteJob(DeleteJobRequest, CallSettings)
+        // Snippet: CancelJob(CancelJobRequest, CallSettings)
         // Create client
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         // Initialize request argument(s)
-        DeleteJobRequest request = new DeleteJobRequest
+        CancelJobRequest request = new CancelJobRequest
         {
             JobName = JobName.FromProjectLocationJob("[PROJECT]", "[LOCATION]", "[JOB]"),
             RequestId = "",
         };
         // Make the request
-        storageBatchOperationsClient.DeleteJob(request);
+        CancelJobResponse response = storageBatchOperationsClient.CancelJob(request);
         // End snippet
     }
 }
-// [END storage_batch_delete_job]
-
+// [END storage_batch_cancel_job]

@@ -29,9 +29,10 @@ public class CreateJobTest
     [Fact]
     public void CreateJob()
     {
+       
         CreateJobSample createJob = new CreateJobSample();
         var bucketName = _fixture.GenerateBucketName();
-        _fixture.CreateBucket(bucketName);
+        _fixture.CreateBucket(bucketName, _fixture.TestLocation);
         LocationName parent = LocationName.FromProjectLocation(_fixture.ProjectId, _fixture.TestLocation);
         createJob.CreateJob(parent.ToString());
     }

@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\testutil\testutil.csproj" />
-    <ProjectReference Include="..\StorageBatchOperations.Sample\StorageBatchOperations.Samples.csproj" />
+    <ProjectReference Include="..\StorageBatchOperations.Samples\StorageBatchOperations.Samples.csproj" />
   </ItemGroup>
 
   <ItemGroup>
