@@ -14,32 +14,26 @@
 
 // [START storage_batch_get_job]
 
-using Google.Api.Gax;
-using Google.Api.Gax.ResourceNames;
-using Google.Apis.Storage.v1.Data;
-using Google.Cloud.Storage.V1;
 using Google.Cloud.StorageBatchOperations.V1;
-using Google.LongRunning;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
-public class GetJobSample
+public class GetBatchJobSample
 {
-    /// <summary>Snippet for CreateJob</summary>
-    public void GetJob(string job = "projects/[PROJECT]/locations/[LOCATION]")
+    /// <summary>
+    /// Get storage batch job.
+    /// </summary>
+    /// <param name="jobId">The job Id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
+    public string GetBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
-        // Snippet: GetJob(GetJobRequest, CallSettings)
-        // Create client
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
-        // Initialize request argument(s)
         GetJobRequest request = new GetJobRequest
         {
-            JobName = JobName.FromProjectLocationJob("storage-sdk-vendor", "us-west4", "JobOne"),
+            Name = jobId
         };
-        // Make the request
+
         Job response = storageBatchOperationsClient.GetJob(request);
-        // End snippet
+        Console.WriteLine($"The Name of Storage Batch Operations Jobs is :{response.Name}");
+        return response.Name;
     }
 }
 // [END storage_batch_get_job]

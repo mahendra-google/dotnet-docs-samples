@@ -17,23 +17,23 @@ using System;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
-public class GetJobTest
+public class GetBatchJobTest
 {
     private readonly StorageFixture _fixture;
 
-    public GetJobTest(StorageFixture fixture)
+    public GetBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
     }
 
     [Fact]
-    public void GetJob()
+    public void GetBatchJob()
     {
-        GetJobSample getJob = new GetJobSample();
-        var bucketName = _fixture.GenerateBucketName();
-        _fixture.CreateBucket(bucketName);
-        LocationName parent = LocationName.FromProjectLocation(_fixture.ProjectId, _fixture.TestLocation);
-        getJob.GetJob(parent.ToString());
-        //Assert.Contains(jobs, c => c.Name == bucketName);
+        GetBatchJobSample getJob = new GetBatchJobSample();
+        var jobId = _fixture.GenerateJobId();
+        var preGetJobName = $"{_fixture.Parent}/jobs/{jobId}";
+        var postGetJobName = getJob.GetBatchJob(preGetJobName);
+        Assert.NotNull(postGetJobName);
+        Assert.Equal(preGetJobName, postGetJobName);
     }
 }
