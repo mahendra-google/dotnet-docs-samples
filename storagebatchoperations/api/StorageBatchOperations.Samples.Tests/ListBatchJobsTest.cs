@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
+using Google.Cloud.StorageBatchOperations.V1;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
@@ -30,9 +31,16 @@ public class ListBatchJobsTest
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         string filter = "";
         int pageSize = 10;
-        string pageToken = "";
-        string orderBy = "";
-        var batchJobs = listBatchJobs.ListBatchJobs(_fixture.Parent, filter, pageSize, pageToken, orderBy);
-        Assert.NotNull(batchJobs);
+        string orderBy = "create_time";
+        var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
+        Assert.All(batchJobs, AssertBatchJob);
+    }
+
+    private void AssertBatchJob(Job b)
+    {
+        Assert.NotNull(b.Name);
+        Assert.NotNull(b.JobName);
+        Assert.NotNull(b.CreateTime);
+        Assert.NotNull(b.CompleteTime);
     }
 }

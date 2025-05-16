@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google.Api.Gax.ResourceNames;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Storage.v1.Data;
 using Google.Cloud.Storage.V1;
+using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,6 +31,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     public IList<string> TempBucketNames { get; } = new List<string>();
     public string ServiceAccountEmail { get; } = "gcs-iam-acl-test@dotnet-docs-samples-tests.iam.gserviceaccount.com";
     public StorageClient Client { get; }
+    public LocationName LocationName { get; }
 
     public StorageFixture()
     {
@@ -37,6 +40,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         {
             throw new Exception("You need to set the Environment variable 'GOOGLE_PROJECT_ID' with your Google Cloud Project's project id.");
         }
+        LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Parent = $"projects/{ProjectId}/locations/{LocationId}";
         Client = StorageClient.Create();
     }

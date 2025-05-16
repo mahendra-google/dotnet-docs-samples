@@ -15,6 +15,7 @@
 // [START storage_batch_list_jobs]
 
 using Google.Api.Gax;
+using Google.Api.Gax.ResourceNames;
 using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.Collections.Generic;
@@ -24,32 +25,36 @@ public class ListBatchJobsSample
     /// <summary>
     /// List storage batch operation jobs.
     /// </summary>
-    /// <param name="parent">The parent of the project in (projects/{project_id}/locations/{location_id}) format.</param>
-    /// <param name="filter">The field to filter the result.</param>
-    /// <param name="listPageSize">The list of page size.</param>
-    /// <param name="pageToken">The list of page token.</param>
-    /// <param name="orderBy">The field to sort by.</param>
-    public IEnumerable<Job> ListBatchJobs(string parent = "projects/{project_id}/locations/{location_id}",
+    /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param>
+    /// <param name="filter">The field to filter the list of storage batch operation jobs.</param>
+    /// <param name="pageSize">The page size to retrieve page of known size.</param>
+    /// <param name="orderBy">The field to sort the list of storage batch operation jobs. Supported fields are name and create_time</param>
+    public IEnumerable<Job> ListBatchJobs(LocationName locationName,
         string filter = "",
-        int listPageSize = 100,
-        string pageToken = "",
-        string orderBy = "")
+        int pageSize = 100,
+        string orderBy = "name")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
 
         ListJobsRequest request = new ListJobsRequest
         {
-            Parent = parent,
+            ParentAsLocationName = locationName,
             Filter = filter,
-            PageSize = listPageSize,
-            PageToken = pageToken,
-            OrderBy = orderBy,
+            OrderBy = orderBy
         };
         PagedEnumerable<ListJobsResponse, Job> response = storageBatchOperationsClient.ListJobs(request);
-        Console.WriteLine("Storage Batch Operation Jobs Names are as follows:");
+        Console.WriteLine("Storage Batch Operation Jobs are as follows:");
         foreach (Job item in response)
         {
-            Console.WriteLine(item.JobName);
+            Console.WriteLine(item);
+        }
+
+        // Retrieve a single page of known size
+        Page<Job> singlePage = response.ReadPage(pageSize);
+        Console.WriteLine($"A single page of {pageSize} page size of Storage Batch Operation Jobs are as follows:");
+        foreach (Job item in singlePage)
+        {
+            Console.WriteLine(item);
         }
         return response;
     }
