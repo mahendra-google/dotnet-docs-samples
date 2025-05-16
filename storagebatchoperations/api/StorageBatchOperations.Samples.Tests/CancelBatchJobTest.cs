@@ -12,28 +12,25 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
-using Google.Api.Gax.ResourceNames;
-using System;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
-public class CancelJobTest
+public class CancelBatchJobTest
 {
     private readonly StorageFixture _fixture;
 
-    public CancelJobTest(StorageFixture fixture)
+    public CancelBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
     }
 
     [Fact]
-    public void CancelJob()
+    public void CancelBatchJob()
     {
         CancelJobSample cancelJob = new CancelJobSample();
-        var bucketName = _fixture.GenerateBucketName();
-        _fixture.CreateBucket(bucketName);
-        LocationName parent = LocationName.FromProjectLocation(_fixture.ProjectId, _fixture.TestLocation);
-        cancelJob.CancelJob(parent.ToString());
-        //Assert.Contains(jobs, c => c.Name == bucketName);
+        var jobId = _fixture.GenerateJobId();
+        var jobName = $"{_fixture.Parent}/jobs/{jobId}";
+        var jobResponse = cancelJob.CancelJob(jobName);
+        Assert.NotNull(jobResponse);
     }
 }

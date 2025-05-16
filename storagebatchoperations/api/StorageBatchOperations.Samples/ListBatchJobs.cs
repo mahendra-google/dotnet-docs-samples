@@ -46,7 +46,7 @@ public class ListBatchJobsSample
             OrderBy = orderBy,
         };
         PagedEnumerable<ListJobsResponse, Job> response = storageBatchOperationsClient.ListJobs(request);
-        Console.WriteLine("Storage Batch Operations Jobs are as follows:");
+        Console.WriteLine("Storage Batch Operation Jobs Names are as follows:");
         foreach (Job item in response)
         {
             Console.WriteLine(item.JobName);

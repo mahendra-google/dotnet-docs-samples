@@ -14,33 +14,24 @@
 
 // [START storage_batch_delete_job]
 
-using Google.Api.Gax;
-using Google.Api.Gax.ResourceNames;
-using Google.Apis.Storage.v1.Data;
-using Google.Cloud.Storage.V1;
 using Google.Cloud.StorageBatchOperations.V1;
-using Google.LongRunning;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
-public class DeleteJobSample
+public class DeleteBatchJobSample
 {
-    /// <summary>Snippet for CreateJob</summary>
-    public void DeleteJob(string job = "projects/[PROJECT]/locations/[LOCATION]")
+    /// <summary>
+    /// Delete storage batch job.
+    /// </summary>
+    /// <param name="jobId">The job Id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
+    public void DeleteBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
-        // Snippet: DeleteJob(DeleteJobRequest, CallSettings)
-        // Create client
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
-        // Initialize request argument(s)
         DeleteJobRequest request = new DeleteJobRequest
         {
-            JobName = JobName.FromProjectLocationJob("[PROJECT]", "[LOCATION]", "[JOB]"),
-            RequestId = "",
+           Name = jobId
         };
-        // Make the request
-        storageBatchOperationsClient.DeleteJob(request);
-        // End snippet
+       storageBatchOperationsClient.DeleteJob(request);
+       Console.WriteLine($"The Storage Batch Operations Jobs with name {jobId} is deleted");
     }
 }
 // [END storage_batch_delete_job]

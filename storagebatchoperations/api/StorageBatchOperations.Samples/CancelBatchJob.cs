@@ -14,33 +14,27 @@
 
 // [START storage_batch_cancel_job]
 
-using Google.Api.Gax;
-using Google.Api.Gax.ResourceNames;
-using Google.Apis.Storage.v1.Data;
-using Google.Cloud.Storage.V1;
 using Google.Cloud.StorageBatchOperations.V1;
-using Google.LongRunning;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 public class CancelJobSample
 {
-    /// <summary>Snippet for CreateJob</summary>
-    public void CancelJob(string job = "projects/[PROJECT]/locations/[LOCATION]")
+    /// <summary>
+    /// Delete storage batch job.
+    /// </summary>
+    /// <param name="jobId">The job Id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
+    public CancelJobResponse CancelJob(string jobId = "projects/[project_id]/locations/[location_id]/jobs/[job_id]")
     {
-        // Snippet: CancelJob(CancelJobRequest, CallSettings)
-        // Create client
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         // Initialize request argument(s)
         CancelJobRequest request = new CancelJobRequest
         {
-            JobName = JobName.FromProjectLocationJob("[PROJECT]", "[LOCATION]", "[JOB]"),
-            RequestId = "",
+            Name = jobId
         };
         // Make the request
         CancelJobResponse response = storageBatchOperationsClient.CancelJob(request);
-        // End snippet
+        Console.WriteLine($"The Storage Batch Operations Jobs with name {jobId} is cancelled ");
+        return response;
     }
 }
 // [END storage_batch_cancel_job]

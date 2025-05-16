@@ -12,28 +12,24 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
-using Google.Api.Gax.ResourceNames;
-using System;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
-public class CreateJobTest
+public class DeleteBatchJobTest
 {
     private readonly StorageFixture _fixture;
 
-    public CreateJobTest(StorageFixture fixture)
+    public DeleteBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
     }
 
     [Fact]
-    public void CreateJob()
+    public void DeleteBatchJob()
     {
-       
-        CreateJobSample createJob = new CreateJobSample();
-        var bucketName = _fixture.GenerateBucketName();
-        _fixture.CreateBucket(bucketName, _fixture.TestLocation);
-        LocationName parent = LocationName.FromProjectLocation(_fixture.ProjectId, _fixture.TestLocation);
-        createJob.CreateJob(parent.ToString());
+        DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
+        var jobId = _fixture.GenerateJobId();
+        var jobName = $"{_fixture.Parent}/jobs/{jobId}";
+        deleteBatchJob.DeleteBatchJob(jobName);
     }
 }
