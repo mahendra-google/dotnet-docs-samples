@@ -15,6 +15,7 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Storage.v1.Data;
+using Google.Cloud.Storage.Control.V2;
 using Google.Cloud.Storage.V1;
 using Google.Cloud.StorageBatchOperations.V1;
 using System;
@@ -32,6 +33,8 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     public string ServiceAccountEmail { get; } = "gcs-iam-acl-test@dotnet-docs-samples-tests.iam.gserviceaccount.com";
     public StorageClient Client { get; }
     public LocationName LocationName { get; }
+    public BucketList.Types.Bucket Bucket { get; }
+    public BucketList BucketList { get; }
 
     public StorageFixture()
     {
@@ -42,6 +45,11 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         }
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Parent = $"projects/{ProjectId}/locations/{LocationId}";
+        Bucket = new BucketList.Types.Bucket
+        {
+            Bucket_ = GenerateBucketName()
+        };
+        BucketList.Buckets.Insert(0,Bucket);
         Client = StorageClient.Create();
     }
 

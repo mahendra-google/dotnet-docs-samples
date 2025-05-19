@@ -28,7 +28,7 @@ public class ListBatchJobsSample
     /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param>
     /// <param name="filter">The field to filter the list of storage batch operation jobs.</param>
     /// <param name="pageSize">The page size to retrieve page of known size.</param>
-    /// <param name="orderBy">The field to sort the list of storage batch operation jobs. Supported fields are name and create_time</param>
+    /// <param name="orderBy">The field to sort the list of storage batch operation jobs. Supported fields are name and create_time.</param>
     public IEnumerable<Job> ListBatchJobs(LocationName locationName,
         string filter = "",
         int pageSize = 100,

@@ -14,45 +14,45 @@
 
 // [START storage_batch_create_job]
 
-using Google.Api.Gax;
 using Google.Api.Gax.ResourceNames;
-using Google.Apis.Storage.v1.Data;
-using Google.Cloud.Storage.V1;
 using Google.Cloud.StorageBatchOperations.V1;
 using Google.LongRunning;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
-public class CreateJobSample
+public class CreateBatchJobSample
 {
-    /// <summary>Snippet for CreateJob</summary>
-    public void CreateJob(string ParentAsLocationName = "projects/[PROJECT]/locations/[LOCATION]")
+    /// <summary>
+    /// Create storage batch operation jobs.
+    /// </summary>
+    /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param
+    public string CreateBatchJob(LocationName locationName, BucketList bucketList, string jobId)
     {
-        // Snippet: CreateJob(CreateJobRequest, CallSettings)
-        // Create client
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
-        string parent = ParentAsLocationName;
-        Job job = new Job();
-        string jobId = "job123";
-        // Make the request
-        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(parent, job, jobId);
-
-        // Poll until the returned long-running operation is complete
+        CreateJobRequest request = new CreateJobRequest
+        {
+            ParentAsLocationName = locationName,
+            JobId = jobId,
+            Job = new Job
+            {
+                DeleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true },
+                PutObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set},
+                BucketList = bucketList
+            },
+            RequestId = Guid.NewGuid().ToString(),
+        };
+       
+        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
-        // Retrieve the operation result
-        Job result = completedResponse.Result;
 
-        // Or get the name of the operation
+        Job result = completedResponse.Result;
         string operationName = response.Name;
-        // This name can be stored, then the long-running operation retrieved later by name
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
-        // Check if the retrieved long-running operation has completed
+       
         if (retrievedResponse.IsCompleted)
         {
-            // If it has completed, then access the result
             Job retrievedResult = retrievedResponse.Result;
         }
+        return operationName;
     }
 }
 // [END storage_batch_create_job]
