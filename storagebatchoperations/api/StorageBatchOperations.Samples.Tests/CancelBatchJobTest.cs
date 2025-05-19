@@ -27,10 +27,10 @@ public class CancelBatchJobTest
     [Fact]
     public void CancelBatchJob()
     {
-        CancelJobSample cancelJob = new CancelJobSample();
+        CancelBatchJobSample cancelBatchJob = new CancelBatchJobSample();
         var jobId = _fixture.GenerateJobId();
         var jobName = $"{_fixture.Parent}/jobs/{jobId}";
-        var jobResponse = cancelJob.CancelJob(jobName);
+        var jobResponse = cancelBatchJob.CancelBatchJob(jobName);
         Assert.NotNull(jobResponse);
     }
 }
