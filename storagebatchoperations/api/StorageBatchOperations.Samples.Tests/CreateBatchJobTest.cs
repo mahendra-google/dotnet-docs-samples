@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
+using Google.Cloud.StorageBatchOperations.V1;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
@@ -29,7 +30,7 @@ public class CreateBatchJobTest
     {
        CreateBatchJobSample createJob = new CreateBatchJobSample();
        var jobId = _fixture.GenerateJobId();
-        string operationName = createJob.CreateBatchJob(_fixture.LocationName, _fixture.BucketList, jobId);
-        Assert.NotNull(operationName);
+        Job createdJob = createJob.CreateBatchJob(_fixture.LocationName, _fixture.BucketList, jobId);
+        Assert.NotNull(createdJob);
     }
 }

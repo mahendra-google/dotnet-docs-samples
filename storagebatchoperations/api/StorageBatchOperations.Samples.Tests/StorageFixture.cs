@@ -33,8 +33,10 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     public string ServiceAccountEmail { get; } = "gcs-iam-acl-test@dotnet-docs-samples-tests.iam.gserviceaccount.com";
     public StorageClient Client { get; }
     public LocationName LocationName { get; }
-    public BucketList.Types.Bucket Bucket { get; }
-    public BucketList BucketList { get; }
+    public BucketList.Types.Bucket Bucket { get; set; } = new BucketList.Types.Bucket();
+    public BucketList BucketList { get; set; } = new BucketList();
+
+    public PrefixList PrefixListObject = new PrefixList();
 
     public StorageFixture()
     {
@@ -45,12 +47,17 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         }
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Parent = $"projects/{ProjectId}/locations/{LocationId}";
+        PrefixListObject.IncludedObjectPrefixes.Add("");
+        Client = StorageClient.Create();
+        var bucketName = GenerateBucketName();
+        _ = CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         Bucket = new BucketList.Types.Bucket
         {
-            Bucket_ = GenerateBucketName()
+            Bucket_ = bucketName,
+            PrefixList = PrefixListObject
         };
         BucketList.Buckets.Insert(0,Bucket);
-        Client = StorageClient.Create();
+        
     }
 
     /// <summary>

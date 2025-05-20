@@ -25,7 +25,7 @@ public class CreateBatchJobSample
     /// Create storage batch operation jobs.
     /// </summary>
     /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param
-    public string CreateBatchJob(LocationName locationName, BucketList bucketList, string jobId)
+    public Job CreateBatchJob(LocationName locationName, BucketList bucketList, string jobId)
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         CreateJobRequest request = new CreateJobRequest
@@ -36,9 +36,10 @@ public class CreateBatchJobSample
             {
                 DeleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true },
                 PutObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set},
-                BucketList = bucketList
+                BucketList = bucketList,
+                
             },
-            RequestId = Guid.NewGuid().ToString(),
+            RequestId = jobId,
         };
        
         Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
@@ -51,8 +52,9 @@ public class CreateBatchJobSample
         if (retrievedResponse.IsCompleted)
         {
             Job retrievedResult = retrievedResponse.Result;
+            return retrievedResult;
         }
-        return operationName;
+        return result;
     }
 }
 // [END storage_batch_create_job]
