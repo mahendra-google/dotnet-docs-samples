@@ -19,10 +19,22 @@ using Xunit;
 public class CreateBatchJobTest
 {
     private readonly StorageFixture _fixture;
+    private BucketList.Types.Bucket _bucket { get; set; } = new BucketList.Types.Bucket();
+    private BucketList _bucketList { get; set; } = new BucketList();
+
+    private readonly PrefixList _prefixListObject = new();
 
     public CreateBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
+        var bucketName = _fixture.GenerateBucketName();
+        _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+        _bucket = new BucketList.Types.Bucket
+        {
+            Bucket_ = bucketName,
+            PrefixList = _prefixListObject
+        };
+        _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
@@ -30,7 +42,11 @@ public class CreateBatchJobTest
     {
        CreateBatchJobSample createJob = new CreateBatchJobSample();
        var jobId = _fixture.GenerateJobId();
-        Job createdJob = createJob.CreateBatchJob(_fixture.LocationName, _fixture.BucketList, jobId);
-        Assert.NotNull(createdJob);
+       var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+       Assert.Equal(createdBatchJob.BucketList, _bucketList);
+       Assert.NotNull(createdBatchJob.Name);
+       Assert.NotNull(createdBatchJob.JobName);
+       Assert.NotNull(createdBatchJob.CreateTime);
+       Assert.NotNull(createdBatchJob.CompleteTime);
     }
 }
