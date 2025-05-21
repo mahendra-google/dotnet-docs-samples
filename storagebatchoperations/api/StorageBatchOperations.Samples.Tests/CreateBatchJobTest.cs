@@ -19,9 +19,8 @@ using Xunit;
 public class CreateBatchJobTest
 {
     private readonly StorageFixture _fixture;
-    private BucketList.Types.Bucket _bucket { get; set; } = new BucketList.Types.Bucket();
-    private BucketList _bucketList { get; set; } = new BucketList();
-
+    private readonly BucketList.Types.Bucket _bucket  = new();
+    private readonly BucketList _bucketList = new();
     private readonly PrefixList _prefixListObject = new();
 
     public CreateBatchJobTest(StorageFixture fixture)

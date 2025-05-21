@@ -12,24 +12,43 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
+using Google.Cloud.StorageBatchOperations.V1;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
 public class DeleteBatchJobTest
 {
     private readonly StorageFixture _fixture;
+    private readonly BucketList.Types.Bucket _bucket = new();
+    private readonly BucketList _bucketList = new();
+    private readonly PrefixList _prefixListObject = new();
 
     public DeleteBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
+        var bucketName = _fixture.GenerateBucketName();
+        _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+        _bucket = new BucketList.Types.Bucket
+        {
+            Bucket_ = bucketName,
+            PrefixList = _prefixListObject
+        };
+        _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
     public void DeleteBatchJob()
     {
         DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
+        ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
+        string filter = "";
+        int pageSize = 10;
+        string orderBy = "create_time";
         var jobId = _fixture.GenerateJobId();
-        var jobName = $"{_fixture.Parent}/jobs/{jobId}";
-        deleteBatchJob.DeleteBatchJob(jobName);
+        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+        var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+        deleteBatchJob.DeleteBatchJob(createdJob.Name);
+        var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
+        Assert.DoesNotContain(batchJobs, jobs => jobs.JobName == createdJob.JobName);
     }
 }

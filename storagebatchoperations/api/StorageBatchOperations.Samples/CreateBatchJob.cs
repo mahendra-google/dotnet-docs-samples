@@ -24,7 +24,9 @@ public class CreateBatchJobSample
     /// <summary>
     /// Create storage batch operation jobs.
     /// </summary>
-    /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param
+    /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param>
+    /// <param name="bucketList">A bucket list contains list of buckets and their objects to be transformed.</param>
+    /// <param name="jobId">It is id for the job and it should not be more than 128 characters.</param>
     public Job CreateBatchJob(LocationName locationName, BucketList bucketList, string jobId)
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
@@ -37,7 +39,6 @@ public class CreateBatchJobSample
                 DeleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true },
                 PutObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set},
                 BucketList = bucketList,
-                
             },
             RequestId = jobId,
         };

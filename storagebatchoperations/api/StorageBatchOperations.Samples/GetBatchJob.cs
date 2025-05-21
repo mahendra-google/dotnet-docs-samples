@@ -23,7 +23,7 @@ public class GetBatchJobSample
     /// Get storage batch job.
     /// </summary>
     /// <param name="jobId">The job Id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
-    public string GetBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
+    public Job GetBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         GetJobRequest request = new GetJobRequest
@@ -33,7 +33,7 @@ public class GetBatchJobSample
 
         Job response = storageBatchOperationsClient.GetJob(request);
         Console.WriteLine($"The Name of Storage Batch Operations Jobs is :{response.Name}");
-        return response.Name;
+        return response;
     }
 }
 // [END storage_batch_get_job]
