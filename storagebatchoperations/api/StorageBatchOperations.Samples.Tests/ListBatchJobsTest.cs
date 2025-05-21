@@ -40,7 +40,7 @@ public class ListBatchJobsTest
     public void ListBatchJobs()
     {
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
-        string filter = "";
+        string filter = "state:succeeded";
         int pageSize = 10;
         string orderBy = "create_time";
         var jobId = _fixture.GenerateJobId();

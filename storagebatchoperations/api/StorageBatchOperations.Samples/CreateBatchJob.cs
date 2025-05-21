@@ -22,7 +22,7 @@ using System;
 public class CreateBatchJobSample
 {
     /// <summary>
-    /// Create storage batch operation jobs.
+    /// Creates a storage batch operation job.
     /// </summary>
     /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param>
     /// <param name="bucketList">A bucket list contains list of buckets and their objects to be transformed.</param>
