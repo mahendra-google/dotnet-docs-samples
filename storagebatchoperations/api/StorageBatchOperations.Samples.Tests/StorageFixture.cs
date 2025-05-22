@@ -102,11 +102,10 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     /// Deletes a batch job at the end of the test.
     /// </summary>
     /// <returns>The jobName.</returns>
-    internal static string DisposeBatchJob(string jobName)
+    internal static void DisposeBatchJob(string jobName)
     {
         DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
         deleteBatchJob.DeleteBatchJob(jobName);
-        return jobName;
     }
 
     public void Dispose()

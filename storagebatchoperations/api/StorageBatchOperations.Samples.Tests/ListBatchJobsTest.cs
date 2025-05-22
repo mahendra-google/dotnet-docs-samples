@@ -47,7 +47,7 @@ public class ListBatchJobsTest
         CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
-        Assert.Contains(batchJobs, jobs => jobs.JobName == createdJob.JobName);
+        Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State);
         Assert.All(batchJobs, AssertBatchJob);
         StorageFixture.DisposeBatchJob(createdJob.Name);
     }

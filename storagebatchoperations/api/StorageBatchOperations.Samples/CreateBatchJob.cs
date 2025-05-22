@@ -17,27 +17,67 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Cloud.StorageBatchOperations.V1;
 using Google.LongRunning;
-using System;
 
 public class CreateBatchJobSample
 {
+    public RewriteObject rewriteObject;
+    public PutMetadata putMetadata;
+    public DeleteObject deleteObject;
+    public PutObjectHold putObjectHold;
+
     /// <summary>
     /// Creates a storage batch operation job.
     /// </summary>
     /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param>
     /// <param name="bucketList">A bucket list contains list of buckets and their objects to be transformed.</param>
     /// <param name="jobId">It is id for the job and it should not be more than 128 characters.</param>
-    public Job CreateBatchJob(LocationName locationName, BucketList bucketList, string jobId)
+    /// <param name="jobType">It is type of storage batch operation job.</param>
+    public Job CreateBatchJob(LocationName locationName,
+        BucketList bucketList,
+        string jobId = "12345678910",
+        string jobType = "DeleteObject")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        
+        if (jobType == "RewriteObject")
+        {
+            rewriteObject = new RewriteObject { KmsKey = "kms-key" };
+        }
+        else if (jobType == "PutMetadata")
+        {
+            putMetadata = new PutMetadata { CacheControl = "", ContentDisposition = "", ContentEncoding = "", ContentLanguage = "", ContentType = "", CustomTime = "" };
+        }
+        else if (jobType == "DeleteObject")
+        {
+            deleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true };
+        }
+        else if (jobType == "PutObjectHoldEventBasedHoldSet")
+        {
+            putObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
+        }
+        else if (jobType == "PutObjectHoldEventBasedHoldUnSet")
+        {
+            putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Unset };
+        }
+        else if (jobType == "PutObjectHoldTemporaryHoldSet")
+        {
+            putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Set };
+        }
+        else if (jobType == "PutObjectHoldTemporaryHoldUnSet")
+        {
+            putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Unset };
+        }
+
         CreateJobRequest request = new CreateJobRequest
         {
             ParentAsLocationName = locationName,
             JobId = jobId,
             Job = new Job
             {
-                DeleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true },
-                PutObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set},
+                DeleteObject = deleteObject,
+                //PutObjectHold = putObjectHold,
+                //RewriteObject = rewriteObject,
+                //PutMetadata = putMetadata,
                 BucketList = bucketList,
             },
             RequestId = jobId,

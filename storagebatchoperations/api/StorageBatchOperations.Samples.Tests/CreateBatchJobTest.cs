@@ -31,7 +31,8 @@ public class CreateBatchJobTest
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
-            PrefixList = _prefixListObject
+            PrefixList = _prefixListObject,
+            Manifest = new Manifest { ManifestLocation = $"gs://{bucketName}/path/object_name.csv" }
         };
         _bucketList.Buckets.Insert(0, _bucket);
     }
@@ -41,7 +42,8 @@ public class CreateBatchJobTest
     {
        CreateBatchJobSample createJob = new CreateBatchJobSample();
        var jobId = _fixture.GenerateJobId();
-       var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+       var jobType = "DeleteObject";
+       var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
        Assert.Equal(createdBatchJob.BucketList, _bucketList);
        Assert.NotNull(createdBatchJob.Name);
        Assert.NotNull(createdBatchJob.JobName);
