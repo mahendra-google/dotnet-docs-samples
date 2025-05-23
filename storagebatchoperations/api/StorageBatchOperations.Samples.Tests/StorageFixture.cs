@@ -15,9 +15,7 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Storage.v1.Data;
-using Google.Cloud.Storage.Control.V2;
 using Google.Cloud.Storage.V1;
-using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -27,7 +25,6 @@ using Xunit;
 public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
 {
     public string ProjectId { get; }
-    public string Parent { get; }
     public string LocationId { get; } = "global";
     public IList<string> TempBucketNames { get; } = new List<string>();
     public string ServiceAccountEmail { get; } = "gcs-iam-acl-test@dotnet-docs-samples-tests.iam.gserviceaccount.com";
@@ -42,7 +39,6 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
             throw new Exception("You need to set the Environment variable 'GOOGLE_PROJECT_ID' with your Google Cloud Project's project id.");
         }
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
-        Parent = $"projects/{ProjectId}/locations/{LocationId}";
         Client = StorageClient.Create();
     }
 
@@ -81,6 +77,12 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     internal string GenerateJobId() => Guid.NewGuid().ToString();
 
     /// <summary>
+    /// Generate the name of the object.
+    /// </summary>
+    /// <returns>The objectName.</returns>
+    internal string GenerateName() => Guid.NewGuid().ToString();
+
+    /// <summary>
     /// Bucket creation/update/deletion is rate-limited. To avoid making the tests flaky, we sleep after each operation.
     /// </summary>
     internal void SleepAfterBucketCreateUpdateDelete() => Thread.Sleep(2000);
@@ -114,7 +116,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         {
             try
             {
-                Client.DeleteBucket(bucketName);
+                Client.DeleteBucket(bucketName, new DeleteBucketOptions { DeleteObjects = true });
                 SleepAfterBucketCreateUpdateDelete();
             }
             catch (Exception)

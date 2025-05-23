@@ -20,10 +20,11 @@ using Google.LongRunning;
 
 public class CreateBatchJobSample
 {
-    public RewriteObject rewriteObject;
-    public PutMetadata putMetadata;
-    public DeleteObject deleteObject;
-    public PutObjectHold putObjectHold;
+    private RewriteObject _rewriteObject;
+    private PutMetadata _putMetadata;
+    private DeleteObject _deleteObject;
+    private PutObjectHold _putObjectHold;
+    private Job _job;
 
     /// <summary>
     /// Creates a storage batch operation job.
@@ -41,45 +42,79 @@ public class CreateBatchJobSample
         
         if (jobType == "RewriteObject")
         {
-            rewriteObject = new RewriteObject { KmsKey = "kms-key" };
+            _rewriteObject = new RewriteObject { KmsKey = "kms-key" };
+
+            _job = new Job
+            {
+                RewriteObject = _rewriteObject,
+                BucketList = bucketList
+            };
         }
         else if (jobType == "PutMetadata")
         {
-            putMetadata = new PutMetadata { CacheControl = "", ContentDisposition = "", ContentEncoding = "", ContentLanguage = "", ContentType = "", CustomTime = "" };
+            _putMetadata = new PutMetadata { CacheControl = "", ContentDisposition = "", ContentEncoding = "", ContentLanguage = "", ContentType = "", CustomTime = "" };
+
+            _job = new Job
+            {
+                PutMetadata = _putMetadata
+            };
         }
         else if (jobType == "DeleteObject")
         {
-            deleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true };
+            _deleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true };
+
+            _job = new Job
+            {
+                DeleteObject = _deleteObject,
+                BucketList = bucketList
+            };
         }
         else if (jobType == "PutObjectHoldEventBasedHoldSet")
         {
-            putObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
+            _putObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
+
+            _job = new Job
+            {
+                PutObjectHold = _putObjectHold,
+                BucketList = bucketList
+            };
         }
         else if (jobType == "PutObjectHoldEventBasedHoldUnSet")
         {
-            putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Unset };
+            _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Unset };
+
+            _job = new Job
+            {
+                PutObjectHold = _putObjectHold,
+                BucketList = bucketList
+            };
         }
         else if (jobType == "PutObjectHoldTemporaryHoldSet")
         {
-            putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Set };
+            _putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Set };
+
+            _job = new Job
+            {
+                PutObjectHold = _putObjectHold,
+                BucketList = bucketList
+            };
         }
         else if (jobType == "PutObjectHoldTemporaryHoldUnSet")
         {
-            putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Unset };
+            _putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Unset };
+
+            _job = new Job
+            {
+                PutObjectHold = _putObjectHold,
+                BucketList = bucketList
+            };
         }
 
         CreateJobRequest request = new CreateJobRequest
         {
             ParentAsLocationName = locationName,
             JobId = jobId,
-            Job = new Job
-            {
-                DeleteObject = deleteObject,
-                //PutObjectHold = putObjectHold,
-                //RewriteObject = rewriteObject,
-                //PutMetadata = putMetadata,
-                BucketList = bucketList,
-            },
+            Job = _job,
             RequestId = jobId,
         };
        
