@@ -43,9 +43,9 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     }
 
     /// <summary>
-    /// Creates the bucket.
+    /// Creates a bucket.
     /// </summary>
-    /// <returns>The bucket.</returns>
+    /// <returns>A bucket.</returns>
     internal Bucket CreateBucket(string name, bool multiVersion, bool softDelete = false, bool registerForDeletion = true)
     {
         var bucket = Client.CreateBucket(ProjectId,
@@ -101,7 +101,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     }
 
     /// <summary>
-    /// Deletes a batch job at the end of the test.
+    /// Deletes the batch job at the end of the test.
     /// </summary>
     /// <returns>The jobName.</returns>
     internal static void DisposeBatchJob(string jobName)

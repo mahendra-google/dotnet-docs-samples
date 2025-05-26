@@ -41,18 +41,17 @@ public class GetBatchJobTest
     {
         GetBatchJobSample getJob = new GetBatchJobSample();
         var jobId = _fixture.GenerateJobId();
-        CreateBatchJobSample preGetJob = new CreateBatchJobSample();
-        var createdJob = preGetJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
-        var postGetJob = getJob.GetBatchJob(createdJob.Name);
-        Assert.NotNull(postGetJob);
-        Assert.Equal(createdJob.Name, postGetJob.Name);
-        Assert.Equal(createdJob.BucketList, postGetJob.BucketList);
-        Assert.Equal(createdJob.State, postGetJob.State);
-        Assert.Equal(createdJob.Description, postGetJob.Description);
-        Assert.Equal(createdJob.ScheduleTime, postGetJob.ScheduleTime);
-        Assert.Equal(createdJob.CompleteTime, postGetJob.CompleteTime);
-        Assert.Equal(createdJob.CreateTime, postGetJob.CreateTime);
-        Assert.Equal(createdJob.Counters, postGetJob.Counters);
+        CreateBatchJobSample createJob = new CreateBatchJobSample();
+        var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+        var getCreatedJob = getJob.GetBatchJob(createdJob.Name);
+        Assert.Equal(createdJob.Name, getCreatedJob.Name);
+        Assert.Equal(createdJob.BucketList, getCreatedJob.BucketList);
+        Assert.Equal(createdJob.State, getCreatedJob.State);
+        Assert.Equal(createdJob.Description, getCreatedJob.Description);
+        Assert.Equal(createdJob.ScheduleTime, getCreatedJob.ScheduleTime);
+        Assert.Equal(createdJob.CompleteTime, getCreatedJob.CompleteTime);
+        Assert.Equal(createdJob.CreateTime, getCreatedJob.CreateTime);
+        Assert.Equal(createdJob.Counters, getCreatedJob.Counters);
         StorageFixture.DisposeBatchJob(createdJob.Name);
     }
 }
