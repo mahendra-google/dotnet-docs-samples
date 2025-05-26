@@ -30,17 +30,19 @@ public class CreateBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+        var manifestBucketName = _fixture.GenerateBucketName();
+        _fixture.CreateBucket(manifestBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         var objectName = _fixture.GenerateName();
         var manifestObjectName = _fixture.GenerateName();
         _fixture.Client.UploadObject(bucketName, objectName, "application/octet-stream", new MemoryStream());
-        byte[] byteArray = System.Text.Encoding.UTF8.GetBytes($"{bucketName},{objectName}");
+        byte[] byteArray = System.Text.Encoding.UTF8.GetBytes($"bucket,name,generation{Environment.NewLine}{bucketName},{objectName}");
         MemoryStream stream = new MemoryStream(byteArray);
-        _fixture.Client.UploadObject(bucketName, manifestObjectName, "application/text", stream);
+        _fixture.Client.UploadObject(manifestBucketName, $"{manifestObjectName}.csv", "text/csv", stream);
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
             PrefixList = _prefixListObject,
-            Manifest = new Manifest { ManifestLocation = $"gs://{bucketName}/{manifestObjectName}.csv" }
+            Manifest = new Manifest { ManifestLocation = $"gs://{manifestBucketName}/{manifestObjectName}.csv" }
         };
         _bucketList.Buckets.Insert(0, _bucket);
     }
