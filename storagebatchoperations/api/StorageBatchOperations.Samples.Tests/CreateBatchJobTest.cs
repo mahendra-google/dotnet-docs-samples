@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Google.Cloud.StorageBatchOperations.V1;
+using System;
 using System.IO;
 using Xunit;
 
@@ -30,12 +31,16 @@ public class CreateBatchJobTest
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         var objectName = _fixture.GenerateName();
+        var manifestObjectName = _fixture.GenerateName();
         _fixture.Client.UploadObject(bucketName, objectName, "application/octet-stream", new MemoryStream());
+        byte[] byteArray = System.Text.Encoding.UTF8.GetBytes($"{bucketName},{objectName}");
+        MemoryStream stream = new MemoryStream(byteArray);
+        _fixture.Client.UploadObject(bucketName, manifestObjectName, "application/text", stream);
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
             PrefixList = _prefixListObject,
-            Manifest = new Manifest { ManifestLocation = $"gs://{bucketName}/object_name.csv" }
+            Manifest = new Manifest { ManifestLocation = $"gs://{bucketName}/{manifestObjectName}.csv" }
         };
         _bucketList.Buckets.Insert(0, _bucket);
     }
