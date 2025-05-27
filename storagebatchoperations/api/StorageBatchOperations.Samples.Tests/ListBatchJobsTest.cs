@@ -26,7 +26,7 @@ public class ListBatchJobsTest
     public ListBatchJobsTest(StorageFixture fixture)
     {
         _fixture = fixture;
-        var bucketName = _fixture.GenerateBucketName();
+        var bucketName = StorageFixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         _bucket = new BucketList.Types.Bucket
         {
@@ -43,13 +43,13 @@ public class ListBatchJobsTest
         string filter = "state:succeeded";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
+        var jobId = StorageFixture.GenerateJobId();
         CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State);
         Assert.All(batchJobs, AssertBatchJob);
-        StorageFixture.DisposeBatchJob(createdJob.Name);
+        StorageFixture.DeleteBatchJob(createdJob.Name);
     }
 
     private void AssertBatchJob(Job b)

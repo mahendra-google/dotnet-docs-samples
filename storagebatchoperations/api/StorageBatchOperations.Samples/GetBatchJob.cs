@@ -31,7 +31,7 @@ public class GetBatchJobSample
             Name = jobId
         };
 
-        Job response = storageBatchOperationsClient.GetJob(request);
+        var response = storageBatchOperationsClient.GetJob(request);
         Console.WriteLine($"The Name of Storage Batch Operations Jobs is :{response.Name}");
         return response;
     }

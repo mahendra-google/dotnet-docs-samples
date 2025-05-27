@@ -15,29 +15,35 @@
 using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.IO;
+using System.Text;
 using Xunit;
 
 [Collection(nameof(StorageFixture))]
 public class CreateBatchJobTest
 {
     private readonly StorageFixture _fixture;
-    private readonly BucketList.Types.Bucket _bucket  = new();
+    private readonly BucketList.Types.Bucket _bucket = new();
     private readonly BucketList _bucketList = new();
     private readonly PrefixList _prefixListObject = new();
 
     public CreateBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
-        var bucketName = _fixture.GenerateBucketName();
+        var bucketName = StorageFixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var manifestBucketName = _fixture.GenerateBucketName();
+        var manifestBucketName = StorageFixture.GenerateBucketName();
         _fixture.CreateBucket(manifestBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var objectName = _fixture.GenerateName();
-        var manifestObjectName = _fixture.GenerateName();
-        _fixture.Client.UploadObject(bucketName, objectName, "application/octet-stream", new MemoryStream());
-        byte[] byteArray = System.Text.Encoding.UTF8.GetBytes($"bucket,name,generation{Environment.NewLine}{bucketName},{objectName}");
-        MemoryStream stream = new MemoryStream(byteArray);
-        _fixture.Client.UploadObject(manifestBucketName, $"{manifestObjectName}.csv", "text/csv", stream);
+        var objectName = StorageFixture.GenerateName();
+        var manifestObjectName = StorageFixture.GenerateName();
+        var objectContent = StorageFixture.GenerateContent();
+        var manifestObjectContent = $"bucket,name,generation{Environment.NewLine}{bucketName},{objectName}";
+        byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
+        MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
+        _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
+        byte[] byteManifestObjectContent = Encoding.UTF8.GetBytes(manifestObjectContent);
+        MemoryStream streamManifestObjectContent = new MemoryStream(byteManifestObjectContent);
+        _fixture.Client.UploadObject(manifestBucketName, $"{manifestObjectName}.csv", "text/csv", streamManifestObjectContent);
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
@@ -50,14 +56,14 @@ public class CreateBatchJobTest
     [Fact]
     public void CreateBatchJob()
     {
-       CreateBatchJobSample createJob = new CreateBatchJobSample();
-       var jobId = _fixture.GenerateJobId();
-       var jobType = "DeleteObject";
-       var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
-       Assert.Equal(createdBatchJob.BucketList, _bucketList);
-       Assert.NotNull(createdBatchJob.Name);
-       Assert.NotNull(createdBatchJob.JobName);
-       Assert.NotNull(createdBatchJob.CreateTime);
-       Assert.NotNull(createdBatchJob.CompleteTime);
+        CreateBatchJobSample createJob = new CreateBatchJobSample();
+        var jobId = StorageFixture.GenerateJobId();
+        var jobType = "DeleteObject";
+        var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
+        Assert.Equal(createdBatchJob.BucketList, _bucketList);
+        Assert.NotNull(createdBatchJob.Name);
+        Assert.NotNull(createdBatchJob.JobName);
+        Assert.NotNull(createdBatchJob.CreateTime);
+        Assert.NotNull(createdBatchJob.CompleteTime);
     }
 }

@@ -28,10 +28,10 @@ public class DeleteBatchJobSample
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         DeleteJobRequest request = new DeleteJobRequest
         {
-           Name = jobId
+            Name = jobId
         };
-       storageBatchOperationsClient.DeleteJob(request);
-       Console.WriteLine($"The Storage Batch Operations Jobs with name {jobId} is deleted");
+        storageBatchOperationsClient.DeleteJob(request);
+        Console.WriteLine($"The Storage Batch Operations Job (Name : {jobId}) is deleted");
     }
 }
 // [END storage_batch_delete_job]

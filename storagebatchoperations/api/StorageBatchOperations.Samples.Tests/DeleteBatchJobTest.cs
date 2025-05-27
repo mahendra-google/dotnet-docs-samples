@@ -26,7 +26,7 @@ public class DeleteBatchJobTest
     public DeleteBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
-        var bucketName = _fixture.GenerateBucketName();
+        var bucketName = StorageFixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         _bucket = new BucketList.Types.Bucket
         {
@@ -41,14 +41,17 @@ public class DeleteBatchJobTest
     {
         DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
+        GetBatchJobSample getBatchJob = new GetBatchJobSample();
         string filter = "";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
+        var jobId = StorageFixture.GenerateJobId();
         CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         deleteBatchJob.DeleteBatchJob(createdJob.Name);
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         Assert.DoesNotContain(batchJobs, jobs => jobs.JobName == createdJob.JobName);
+        var exception = Assert.Throws<Grpc.Core.RpcException>(() => getBatchJob.GetBatchJob(createdJob.Name));
+        Assert.Equal(Grpc.Core.StatusCode.NotFound, exception.StatusCode);
     }
 }
