@@ -20,15 +20,15 @@ using System;
 public class DeleteBatchJobSample
 {
     /// <summary>
-    /// Delete storage batch job.
+    /// Deletes a storage batch job.
     /// </summary>
-    /// <param name="jobId">The job Id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
+    /// <param name="jobId">The job id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
     public void DeleteBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         DeleteJobRequest request = new DeleteJobRequest
         {
-            Name = jobId
+           Name = jobId
         };
         storageBatchOperationsClient.DeleteJob(request);
         Console.WriteLine($"The Storage Batch Operations Job (Name : {jobId}) is deleted");
