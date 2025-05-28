@@ -22,13 +22,13 @@ public class DeleteBatchJobSample
     /// <summary>
     /// Deletes a storage batch job.
     /// </summary>
-    /// <param name="jobName">The name of the job to cancel.Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
+    /// <param name="jobName">The name of the job to delete.Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
     public void DeleteBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         DeleteJobRequest request = new DeleteJobRequest
         {
-           Name = jobName
+            Name = jobName
         };
         storageBatchOperationsClient.DeleteJob(request);
         Console.WriteLine($"The Storage Batch Operations Job (Name : {jobName}) is deleted");

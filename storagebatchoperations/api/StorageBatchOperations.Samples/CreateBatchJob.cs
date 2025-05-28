@@ -40,7 +40,7 @@ public class CreateBatchJobSample
         string jobType = "DeleteObject")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
-        
+
         if (jobType == "RewriteObject")
         {
             _rewriteObject = new RewriteObject { KmsKey = "kms-key" };
@@ -72,7 +72,7 @@ public class CreateBatchJobSample
         }
         else if (jobType == "PutObjectHoldEventBasedHoldSet")
         {
-            _putObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
+            _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
 
             _job = new Job
             {
@@ -118,14 +118,14 @@ public class CreateBatchJobSample
             Job = _job,
             RequestId = jobId,
         };
-       
+
         Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
 
         Job result = completedResponse.Result;
         string operationName = response.Name;
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
-       
+
         if (retrievedResponse.IsCompleted)
         {
             Job retrievedResult = retrievedResponse.Result;
