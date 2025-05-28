@@ -22,16 +22,16 @@ public class DeleteBatchJobSample
     /// <summary>
     /// Deletes a storage batch job.
     /// </summary>
-    /// <param name="jobId">The job id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
-    public void DeleteBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
+    /// <param name="jobName">The name of the job to cancel.Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
+    public void DeleteBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         DeleteJobRequest request = new DeleteJobRequest
         {
-           Name = jobId
+           Name = jobName
         };
         storageBatchOperationsClient.DeleteJob(request);
-        Console.WriteLine($"The Storage Batch Operations Job (Name : {jobId}) is deleted");
+        Console.WriteLine($"The Storage Batch Operations Job (Name : {jobName}) is deleted");
     }
 }
 // [END storage_batch_delete_job]

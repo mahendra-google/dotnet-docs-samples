@@ -22,13 +22,13 @@ public class GetBatchJobSample
     /// <summary>
     /// Get a storage batch job.
     /// </summary>
-    /// <param name="jobId">The job id of storage batch job in (projects/{project_id}/locations/{location_id}/jobs/{job_id}) format.</param>
-    public Job GetBatchJob(string jobId = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
+    /// <param name="jobName">The name of the job to cancel.Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
+    public Job GetBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         GetJobRequest request = new GetJobRequest
         {
-            Name = jobId
+            Name = jobName
         };
 
         var response = storageBatchOperationsClient.GetJob(request);

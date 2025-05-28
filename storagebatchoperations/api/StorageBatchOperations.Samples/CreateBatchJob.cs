@@ -31,7 +31,8 @@ public class CreateBatchJobSample
     /// </summary>
     /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c></param>
     /// <param name="bucketList">A bucket list contains list of buckets and their objects to be transformed.</param>
-    /// <param name="jobId">It is id for the job and it should not be more than 128 characters.</param>
+    /// <param name="jobId">It is id for the job and it should not be more than 128 characters and must include only
+    /// characters available in DNS names, as defined by RFC-1123.</param>
     /// <param name="jobType">It is type of storage batch operation job.</param>
     public Job CreateBatchJob(LocationName locationName,
         BucketList bucketList,
@@ -39,7 +40,7 @@ public class CreateBatchJobSample
         string jobType = "DeleteObject")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
-
+        
         if (jobType == "RewriteObject")
         {
             _rewriteObject = new RewriteObject { KmsKey = "kms-key" };
@@ -71,7 +72,7 @@ public class CreateBatchJobSample
         }
         else if (jobType == "PutObjectHoldEventBasedHoldSet")
         {
-            _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
+            _putObjectHold =  new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
 
             _job = new Job
             {
@@ -117,14 +118,14 @@ public class CreateBatchJobSample
             Job = _job,
             RequestId = jobId,
         };
-
+       
         Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
 
         Job result = completedResponse.Result;
         string operationName = response.Name;
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
-
+       
         if (retrievedResponse.IsCompleted)
         {
             Job retrievedResult = retrievedResponse.Result;

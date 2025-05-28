@@ -100,7 +100,7 @@ public class CancelBatchJobTest
     }
 
     /// <summary>
-    /// Wait for 10 seconds before polling storage batch job operation.
+    /// Wait for 15 seconds before polling storage batch job operation.
     /// </summary>
-    private static void WaitBeforePollingBatchOperation() => Thread.Sleep(10000);
+    private static void WaitBeforePollingBatchOperation() => Thread.Sleep(15000);
 }
