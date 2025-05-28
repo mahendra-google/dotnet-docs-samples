@@ -20,9 +20,9 @@ using System;
 public class CancelBatchJobSample
 {
     /// <summary>
-    /// Cancels a storage batch job.
+    /// Cancels a storage batch operation job.
     /// </summary>
-    /// <param name="jobName">The name of the job to cancel.Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
+    /// <param name="jobName">The name of the job to cancel. Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
     public CancelJobResponse CancelBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
@@ -32,7 +32,7 @@ public class CancelBatchJobSample
             RequestId = jobName
         };
         CancelJobResponse response = storageBatchOperationsClient.CancelJob(request);
-        Console.WriteLine($"The Storage Batch Operations Job (Name:{jobName}) is cancelled ");
+        Console.WriteLine($"The Storage Batch Operation Job (Name: {jobName}) is cancelled ");
         return response;
     }
 }

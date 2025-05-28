@@ -15,7 +15,6 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Cloud.StorageBatchOperations.V1;
 using Google.LongRunning;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading;

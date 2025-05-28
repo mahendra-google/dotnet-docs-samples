@@ -26,7 +26,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
 {
     public string ProjectId { get; }
     public string LocationId { get; } = "global";
-    public IList<string> TempBucketNames { get; } = new List<string>();
+    public IList<string> TempBucketNames { get; } = [];
     public string ServiceAccountEmail { get; } = "gcs-iam-acl-test@dotnet-docs-samples-tests.iam.gserviceaccount.com";
     public StorageClient Client { get; }
     public LocationName LocationName { get; }
