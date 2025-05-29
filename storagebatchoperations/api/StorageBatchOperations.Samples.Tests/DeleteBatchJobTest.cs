@@ -50,7 +50,7 @@ public class DeleteBatchJobTest
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         deleteBatchJob.DeleteBatchJob(createdJob.Name);
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
-        Assert.DoesNotContain(batchJobs, jobs => jobs.JobName == createdJob.JobName);
+        Assert.DoesNotContain(batchJobs, job => job.JobName == createdJob.JobName);
         var exception = Assert.Throws<Grpc.Core.RpcException>(() => getBatchJob.GetBatchJob(createdJob.Name));
         Assert.Equal(Grpc.Core.StatusCode.NotFound, exception.StatusCode);
     }

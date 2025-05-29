@@ -46,6 +46,8 @@ public class GetBatchJobTest
         var getCreatedJob = getJob.GetBatchJob(createdJob.Name);
         Assert.Equal(createdJob.Name, getCreatedJob.Name);
         Assert.Equal(createdJob.BucketList, getCreatedJob.BucketList);
+        Assert.Equal(createdJob.TransformationCase.ToString(), getCreatedJob.TransformationCase.ToString());
+        Assert.Equal(createdJob.SourceCase.ToString(), getCreatedJob.SourceCase.ToString());
         Assert.Equal(createdJob.State, getCreatedJob.State);
         Assert.Equal(createdJob.Description, getCreatedJob.Description);
         Assert.Equal(createdJob.ScheduleTime, getCreatedJob.ScheduleTime);

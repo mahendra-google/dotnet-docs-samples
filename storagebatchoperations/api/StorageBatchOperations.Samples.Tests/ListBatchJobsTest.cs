@@ -47,7 +47,7 @@ public class ListBatchJobsTest
         CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
-        Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State);
+        Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State && job.SourceCase == createdJob.SourceCase && job.TransformationCase == createdJob.TransformationCase);
         Assert.All(batchJobs, AssertBatchJob);
         StorageFixture.DeleteBatchJob(createdJob.Name);
     }
@@ -58,5 +58,7 @@ public class ListBatchJobsTest
         Assert.NotNull(b.JobName);
         Assert.NotNull(b.CreateTime);
         Assert.NotNull(b.CompleteTime);
+        Assert.NotNull(b.SourceCase.ToString());
+        Assert.NotNull(b.TransformationCase.ToString());
     }
 }
