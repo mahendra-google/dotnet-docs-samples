@@ -63,7 +63,7 @@ public class CancelBatchJobTest
         var jobId = StorageFixture.GenerateJobId();
         var createdJob = CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var jobResponse = cancelBatchJob.CancelBatchJob(createdJob);
-        WaitBeforePollingBatchOperation();
+        PollUntilCancelled();
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         Assert.Contains(batchJobs, job => job.Name == createdJob);
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
@@ -93,13 +93,22 @@ public class CancelBatchJobTest
 
         string operationName = response.Name;
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
-        WaitBeforePollingBatchOperation();
-        string jobName = retrievedResponse.Metadata.Job.Name;
-        return jobName;
+
+        if (retrievedResponse.IsCompleted)
+        {
+            string jobName = retrievedResponse.Metadata.Job.Name;
+            return jobName;
+        }
+        else
+        {
+            retrievedResponse = retrievedResponse.PollOnce();
+            string jobName = retrievedResponse.Metadata.Job.Name;
+            return jobName;
+        }
     }
 
     /// <summary>
-    /// Wait for 15 seconds before polling storage batch job operation.
+    /// Wait for 15 seconds until completion of cancel batch job operation.
     /// </summary>
-    private static void WaitBeforePollingBatchOperation() => Thread.Sleep(15000);
+    private static void PollUntilCancelled() => Thread.Sleep(15000);
 }
