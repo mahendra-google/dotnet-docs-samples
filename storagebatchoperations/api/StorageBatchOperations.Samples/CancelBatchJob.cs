@@ -16,6 +16,7 @@
 
 using Google.Cloud.StorageBatchOperations.V1;
 using System;
+using System.Threading.Tasks;
 
 public class CancelBatchJobSample
 {
@@ -23,7 +24,7 @@ public class CancelBatchJobSample
     /// Cancels a storage batch operation job.
     /// </summary>
     /// <param name="jobName">The name of the job to cancel. Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
-    public CancelJobResponse CancelBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
+    public Task<CancelJobResponse> CancelBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         CancelJobRequest request = new CancelJobRequest
@@ -31,8 +32,8 @@ public class CancelBatchJobSample
             Name = jobName,
             RequestId = jobName
         };
-        CancelJobResponse response = storageBatchOperationsClient.CancelJob(request);
-        Console.WriteLine($"The Storage Batch Operation Job (Name: {jobName}) is cancelled ");
+        Task <CancelJobResponse> response = storageBatchOperationsClient.CancelJobAsync(request);
+        Console.WriteLine($"The Storage Batch Operation Job (Name: {jobName}) is cancelled");
         return response;
     }
 }
