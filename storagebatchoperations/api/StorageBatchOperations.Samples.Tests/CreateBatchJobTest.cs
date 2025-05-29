@@ -61,6 +61,8 @@ public class CreateBatchJobTest
         var jobType = "DeleteObject";
         var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
         Assert.Equal(createdBatchJob.BucketList, _bucketList);
+        Assert.Equal(createdBatchJob.TransformationCase.ToString(), jobType);
+        Assert.Equal(createdBatchJob.SourceCase.ToString(), _bucketList.GetType().Name);
         Assert.NotNull(createdBatchJob.Name);
         Assert.NotNull(createdBatchJob.JobName);
         Assert.NotNull(createdBatchJob.CreateTime);
