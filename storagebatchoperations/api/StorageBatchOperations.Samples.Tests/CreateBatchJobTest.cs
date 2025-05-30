@@ -58,10 +58,21 @@ public class CreateBatchJobTest
     {
         CreateBatchJobSample createJob = new CreateBatchJobSample();
         var jobId = _fixture.GenerateJobId();
-        var jobType = "DeleteObject";
+        var jobTransformationCase = "PutObjectHold";
+        var holdState = "EventBasedHoldSet";
+        string jobType;
+        if (jobTransformationCase == "PutObjectHold")
+        {
+            jobType = $"{jobTransformationCase}{holdState}";
+        }
+        else
+        {
+            jobType = jobTransformationCase;
+        }
+
         var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
         Assert.Equal(createdBatchJob.BucketList, _bucketList);
-        Assert.Equal(createdBatchJob.TransformationCase.ToString(), jobType);
+        Assert.Equal(createdBatchJob.TransformationCase.ToString(), jobTransformationCase);
         Assert.Equal(createdBatchJob.SourceCase.ToString(), _bucketList.GetType().Name);
         Assert.NotNull(createdBatchJob.Name);
         Assert.NotNull(createdBatchJob.JobName);

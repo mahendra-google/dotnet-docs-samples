@@ -44,7 +44,7 @@ public class CreateBatchJobSample
 
         if (jobType == "RewriteObject")
         {
-            _rewriteObject = new RewriteObject { KmsKey = "kms-key" };
+            _rewriteObject = new RewriteObject { KmsKey = "projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}" };
 
             _job = new Job
             {
