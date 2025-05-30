@@ -1,18 +1,16 @@
-﻿/*
- * Copyright (c) 2016 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
+// Copyright 2025 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +19,6 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-
 
 namespace GoogleCloudSamples
 {
@@ -38,8 +35,8 @@ namespace GoogleCloudSamples
                 while (nextChar < randomChars.Length)
                 {
                     rng.GetBytes(randomByte);
-                    if (legalChars.Contains((char)randomByte[0]))
-                        randomChars[nextChar++] = (char)randomByte[0];
+                    if (legalChars.Contains((char) randomByte[0]))
+                        randomChars[nextChar++] = (char) randomByte[0];
                 }
                 return new string(randomChars);
             }
@@ -76,21 +73,21 @@ namespace GoogleCloudSamples
                 catch (Exception e) when (ShouldCatch(e) && i < MaxTryCount)
                 {
                     int jitteredDelayMs;
-                    lock(_lock)
+                    lock (_lock)
                     {
-                        jitteredDelayMs = delayMs/2 + (int)(_random.NextDouble() * delayMs);
+                        jitteredDelayMs = delayMs / 2 + (int) (_random.NextDouble() * delayMs);
                     }
                     Thread.Sleep(jitteredDelayMs);
-                    delayMs *= (int)DelayMultiplier;
+                    delayMs *= (int) DelayMultiplier;
                 }
             }
         }
 
         public void Eventually(Action action) =>
             Eventually(() =>
-            { 
+            {
                 action();
-                return 0; 
+                return 0;
             });
 
 
@@ -108,10 +105,10 @@ namespace GoogleCloudSamples
                     int jitteredDelayMs;
                     lock (_lock)
                     {
-                        jitteredDelayMs = delayMs / 2 + (int)(_random.NextDouble() * delayMs);
+                        jitteredDelayMs = delayMs / 2 + (int) (_random.NextDouble() * delayMs);
                     }
                     await Task.Delay(jitteredDelayMs);
-                    delayMs *= (int)DelayMultiplier;
+                    delayMs *= (int) DelayMultiplier;
                 }
             }
         }
@@ -119,9 +116,9 @@ namespace GoogleCloudSamples
         public async Task Eventually(Func<Task> action)
         {
             await Eventually(async () =>
-            { 
+            {
                 await action();
-                return 0; 
+                return 0;
             });
         }
 
