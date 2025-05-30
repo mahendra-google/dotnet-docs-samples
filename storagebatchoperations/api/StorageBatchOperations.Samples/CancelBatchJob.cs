@@ -16,7 +16,6 @@
 
 using Google.Cloud.StorageBatchOperations.V1;
 using System;
-using System.Threading.Tasks;
 
 public class CancelBatchJobSample
 {

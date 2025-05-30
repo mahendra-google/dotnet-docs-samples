@@ -30,7 +30,7 @@ public class CreateBatchJobSample
     /// <summary>
     /// Creates a storage batch operation job.
     /// </summary>
-    /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}.</c></param>
+    /// <param name="locationName">A resource name with pattern <c>projects/{project}/locations/{location}</c>.</param>
     /// <param name="bucketList">A bucket list contains list of buckets and their objects to be transformed.</param>
     /// <param name="jobId">It is id for the job and it should not be more than 128 characters and must include only
     /// characters available in DNS names, as defined by RFC-1123.</param>
@@ -58,7 +58,8 @@ public class CreateBatchJobSample
 
             _job = new Job
             {
-                PutMetadata = _putMetadata
+                PutMetadata = _putMetadata,
+                BucketList = bucketList
             };
         }
         else if (jobType == "DeleteObject")
