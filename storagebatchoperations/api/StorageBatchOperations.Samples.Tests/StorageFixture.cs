@@ -68,32 +68,32 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     /// Generate the name of the bucket.
     /// </summary>
     /// <returns>The bucketName.</returns>
-    internal static string GenerateBucketName() => Guid.NewGuid().ToString();
+    internal string GenerateBucketName() => Guid.NewGuid().ToString();
 
     /// <summary>
     /// Generate the Id of the job.
     /// </summary>
     /// <returns>The jobId.</returns>
-    internal static string GenerateJobId() => Guid.NewGuid().ToString();
+    internal string GenerateJobId() => Guid.NewGuid().ToString();
 
     /// <summary>
     /// Generate the name of the object.
     /// </summary>
     /// <returns>The objectName.</returns>
-    internal static string GenerateName() => Guid.NewGuid().ToString();
+    internal string GenerateName() => Guid.NewGuid().ToString();
 
     /// <summary>
     /// Generate the content of the object.
     /// </summary>
     /// <returns>The objectContent.</returns>
-    internal static string GenerateContent() => Guid.NewGuid().ToString();
+    internal string GenerateContent() => Guid.NewGuid().ToString();
 
     /// <summary>
     /// Bucket creation/update/deletion is rate-limited. To avoid making the tests flaky, we sleep after each operation.
     /// </summary>
-    internal static void SleepAfterBucketCreateUpdateDelete() => Thread.Sleep(2000);
+    internal void SleepAfterBucketCreateUpdateDelete() => Thread.Sleep(2000);
 
-    internal static string GetServiceAccountEmail()
+    internal string GetServiceAccountEmail()
     {
         var cred = GoogleCredential.GetApplicationDefault().UnderlyingCredential;
         switch (cred)
@@ -109,8 +109,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     /// <summary>
     /// Deletes the batch job at the end of the test.
     /// </summary>
-    /// <returns>The jobName.</returns>
-    internal static void DeleteBatchJob(string jobName)
+    internal void DeleteBatchJob(string jobName)
     {
         DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
         deleteBatchJob.DeleteBatchJob(jobName);

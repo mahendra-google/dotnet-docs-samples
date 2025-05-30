@@ -26,7 +26,7 @@ public class GetBatchJobTest
     public GetBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
-        var bucketName = StorageFixture.GenerateBucketName();
+        var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         _bucket = new BucketList.Types.Bucket
         {
@@ -40,7 +40,7 @@ public class GetBatchJobTest
     public void GetBatchJob()
     {
         GetBatchJobSample getJob = new GetBatchJobSample();
-        var jobId = StorageFixture.GenerateJobId();
+        var jobId = _fixture.GenerateJobId();
         CreateBatchJobSample createJob = new CreateBatchJobSample();
         var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var getCreatedJob = getJob.GetBatchJob(createdJob.Name);
@@ -54,6 +54,6 @@ public class GetBatchJobTest
         Assert.Equal(createdJob.CompleteTime, getCreatedJob.CompleteTime);
         Assert.Equal(createdJob.CreateTime, getCreatedJob.CreateTime);
         Assert.Equal(createdJob.Counters, getCreatedJob.Counters);
-        StorageFixture.DeleteBatchJob(createdJob.Name);
+        _fixture.DeleteBatchJob(createdJob.Name);
     }
 }

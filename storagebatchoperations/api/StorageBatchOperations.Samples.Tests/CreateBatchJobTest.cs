@@ -29,13 +29,13 @@ public class CreateBatchJobTest
     public CreateBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
-        var bucketName = StorageFixture.GenerateBucketName();
+        var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var manifestBucketName = StorageFixture.GenerateBucketName();
+        var manifestBucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(manifestBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var objectName = StorageFixture.GenerateName();
-        var manifestObjectName = StorageFixture.GenerateName();
-        var objectContent = StorageFixture.GenerateContent();
+        var objectName = _fixture.GenerateName();
+        var manifestObjectName = _fixture.GenerateName();
+        var objectContent = _fixture.GenerateContent();
         var manifestObjectContent = $"bucket,name,generation{Environment.NewLine}{bucketName},{objectName}";
         byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
         MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
@@ -57,7 +57,7 @@ public class CreateBatchJobTest
     public void CreateBatchJob()
     {
         CreateBatchJobSample createJob = new CreateBatchJobSample();
-        var jobId = StorageFixture.GenerateJobId();
+        var jobId = _fixture.GenerateJobId();
         var jobType = "DeleteObject";
         var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
         Assert.Equal(createdBatchJob.BucketList, _bucketList);

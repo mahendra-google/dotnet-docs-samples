@@ -26,7 +26,7 @@ public class DeleteBatchJobTest
     public DeleteBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
-        var bucketName = StorageFixture.GenerateBucketName();
+        var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         _bucket = new BucketList.Types.Bucket
         {
@@ -45,7 +45,7 @@ public class DeleteBatchJobTest
         string filter = "";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = StorageFixture.GenerateJobId();
+        var jobId = _fixture.GenerateJobId();
         CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         deleteBatchJob.DeleteBatchJob(createdJob.Name);

@@ -32,12 +32,12 @@ public class CancelBatchJobTest
     {
         int i = 10;
         _fixture = fixture;
-        var bucketName = StorageFixture.GenerateBucketName();
+        var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
         while (i >= 0)
         {
-            var objectName = StorageFixture.GenerateName();
-            var objectContent = StorageFixture.GenerateContent();
+            var objectName = _fixture.GenerateName();
+            var objectContent = _fixture.GenerateContent();
             byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
             MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
             _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
@@ -60,7 +60,7 @@ public class CancelBatchJobTest
         string filter = "state:canceled";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = StorageFixture.GenerateJobId();
+        var jobId = _fixture.GenerateJobId();
         var createdJob = CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var jobResponse = cancelBatchJob.CancelBatchJob(createdJob);
         PollUntilCancelled();
@@ -68,7 +68,7 @@ public class CancelBatchJobTest
         Assert.Contains(batchJobs, job => job.Name == createdJob);
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
         Assert.Equal("Canceled", cancelledJob.State.ToString());
-        StorageFixture.DeleteBatchJob(createdJob);
+        _fixture.DeleteBatchJob(createdJob);
     }
 
     public static string CreateBatchJob(LocationName locationName,
