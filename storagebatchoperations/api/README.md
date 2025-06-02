@@ -3,8 +3,8 @@
 These samples demonstrate how to interact with the [Google Cloud Storage Batch Operations API][Storage Batch Operations] from C# and
 the .NET client libraries to call the Storage Batch Operations API.
 
-The samples requires [.NET Core 3.1][net-core] or later.  That means using
-[Visual Studio 2019](https://www.visualstudio.com/), or the command line.
+The samples requires [.NET 8][.NET].  That means using
+[Visual Studio 2022](https://www.visualstudio.com/), or the command line.
 
 ## Setup
 
@@ -28,4 +28,4 @@ The samples requires [.NET Core 3.1][net-core] or later.  That means using
 
 [Storage Batch Operations]: https://cloud.google.com/storage/docs/batch-operations/overview
 [enable-api]: https://console.cloud.google.com/flows/enableapi?apiid=storagebatchoperations_api&showconfirmation=true
-[net-core]: https://www.microsoft.com/net/core
+[.NET]: https://dotnet.microsoft.com/en-us/download
