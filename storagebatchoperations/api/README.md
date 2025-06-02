@@ -4,7 +4,7 @@ These samples demonstrate how to interact with the [Google Cloud Storage Batch O
 the .NET client libraries to call the Storage Batch Operations API.
 
 The samples requires [.NET Core 3.1][net-core] or later.  That means using
-[Visual Studio 2017](https://www.visualstudio.com/), or the command line.
+[Visual Studio 2019](https://www.visualstudio.com/), or the command line.
 
 ## Setup
 
