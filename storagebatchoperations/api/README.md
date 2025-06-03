@@ -10,7 +10,7 @@ The samples requires [.NET 8][.NET].That means using
 
 1.  Set up a [.NET development environment](https://cloud.google.com/dotnet/docs/setup).
 
-4.  Enable APIs for your project.
+2.  Enable APIs for your project.
     [Click here][enable-api]
     to visit Cloud Platform Console and enable the Google Cloud Storage Batch Operations API.
 
