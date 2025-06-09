@@ -40,7 +40,7 @@ public class CreateBatchJobSample
         string jobId = "12345678910",
         string jobType = "DeleteObject")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
 
         if (jobType == "RewriteObject")
         {
@@ -121,18 +121,10 @@ public class CreateBatchJobSample
             RequestId = jobId,
         };
 
-        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
+        Operation<Job, OperationMetadata> response = operationsClient.CreateJob(request);
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
 
         Job result = completedResponse.Result;
-        string operationName = response.Name;
-        Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
-
-        if (retrievedResponse.IsCompleted)
-        {
-            Job retrievedResult = retrievedResponse.Result;
-            return retrievedResult;
-        }
         Console.WriteLine($"The Storage Batch Operation Job (Name: {result.Name}) is created");
         return result;
     }

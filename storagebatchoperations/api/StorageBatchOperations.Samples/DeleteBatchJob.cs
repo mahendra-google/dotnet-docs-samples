@@ -25,12 +25,14 @@ public class DeleteBatchJobSample
     /// <param name="jobName">The name of the job to delete. Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
     public void DeleteBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
+
         DeleteJobRequest request = new DeleteJobRequest
         {
             Name = jobName
         };
-        storageBatchOperationsClient.DeleteJob(request);
+
+        operationsClient.DeleteJob(request);
         Console.WriteLine($"The Storage Batch Operation Job (Name : {jobName}) is deleted");
     }
 }

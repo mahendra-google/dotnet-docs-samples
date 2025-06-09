@@ -34,14 +34,16 @@ public class ListBatchJobsSample
         int pageSize = 100,
         string orderBy = "name")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
+
         ListJobsRequest request = new ListJobsRequest
         {
             ParentAsLocationName = locationName,
             Filter = filter,
             OrderBy = orderBy
         };
-        PagedEnumerable<ListJobsResponse, Job> response = storageBatchOperationsClient.ListJobs(request);
+
+        PagedEnumerable<ListJobsResponse, Job> response = operationsClient.ListJobs(request);
         Console.WriteLine("Storage Batch Operation Jobs are as follows:");
 
         foreach (var item in response)

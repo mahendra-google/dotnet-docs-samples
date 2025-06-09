@@ -31,15 +31,19 @@ public class CreateBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         var manifestBucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(manifestBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var objectName = _fixture.GenerateName();
-        var manifestObjectName = _fixture.GenerateName();
-        var objectContent = _fixture.GenerateContent();
+
+        var objectName = _fixture.GenerateGuid();
+        var manifestObjectName = _fixture.GenerateGuid();
+        var objectContent = _fixture.GenerateGuid();
         var manifestObjectContent = $"bucket,name,generation{Environment.NewLine}{bucketName},{objectName}";
+
         byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
         MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
         _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
+
         byte[] byteManifestObjectContent = Encoding.UTF8.GetBytes(manifestObjectContent);
         MemoryStream streamManifestObjectContent = new MemoryStream(byteManifestObjectContent);
         _fixture.Client.UploadObject(manifestBucketName, $"{manifestObjectName}.csv", "text/csv", streamManifestObjectContent);
@@ -50,17 +54,19 @@ public class CreateBatchJobTest
             PrefixList = _prefixListObject,
             Manifest = new Manifest { ManifestLocation = $"gs://{manifestBucketName}/{manifestObjectName}.csv" }
         };
+
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void CreateBatchJob()
+    public void TestCreateBatchJob()
     {
         CreateBatchJobSample createJob = new CreateBatchJobSample();
-        var jobId = _fixture.GenerateJobId();
+        var jobId = _fixture.GenerateGuid();
         var jobTransformationCase = "DeleteObject";
         var holdState = "EventBasedHoldSet";
         string jobType;
+
         if (jobTransformationCase == "PutObjectHold")
         {
             jobType = $"{jobTransformationCase}{holdState}";

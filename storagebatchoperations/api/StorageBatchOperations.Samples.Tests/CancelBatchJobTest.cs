@@ -15,7 +15,6 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Cloud.StorageBatchOperations.V1;
 using Google.LongRunning;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -35,38 +34,45 @@ public class CancelBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         while (i >= 0)
         {
-            var objectName = _fixture.GenerateName();
-            var objectContent = _fixture.GenerateContent();
+            var objectName = _fixture.GenerateGuid();
+            var objectContent = _fixture.GenerateGuid();
             byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
             MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
             _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
             i--;
         }
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
             PrefixList = _prefixListObject
         };
+
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void CancelBatchJob()
+    public void TestCancelBatchJob()
     {
         CancelBatchJobSample cancelBatchJob = new CancelBatchJobSample();
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         GetBatchJobSample getBatchJob = new GetBatchJobSample();
+
         string filter = "state:canceled";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
+
+        var jobId = _fixture.GenerateGuid();
         var createdJob = CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
-        var jobResponse = cancelBatchJob.CancelBatchJob(createdJob);
+        var cancelJobResponse = cancelBatchJob.CancelBatchJob(createdJob);
         PollUntilCancelled();
+
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
-        Assert.Contains(batchJobs, job => job.Name == createdJob);
+        Assert.Contains(batchJobs, job => job.Name == createdJob && job.State == Job.Types.State.Canceled);
+
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
         Assert.Equal("Canceled", cancelledJob.State.ToString());
         _fixture.DeleteBatchJob(createdJob);
@@ -76,7 +82,8 @@ public class CancelBatchJobTest
         BucketList bucketList,
         string jobId = "12345678910")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
+
         CreateJobRequest request = new CreateJobRequest
         {
             ParentAsLocationName = locationName,
@@ -89,14 +96,14 @@ public class CancelBatchJobTest
             RequestId = jobId,
         };
 
-        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
+        Operation<Job, OperationMetadata> response = operationsClient.CreateJob(request);
         string operationName = response.Name;
-        Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
+        Operation<Job, OperationMetadata> retrievedResponse = operationsClient.PollOnceCreateJob(operationName);
 
         while (true)
         {
             retrievedResponse = retrievedResponse.PollOnce();
-            if (string.IsNullOrEmpty(retrievedResponse.Metadata.ToString()))
+            if (string.IsNullOrEmpty(retrievedResponse.Metadata.Job.Name.ToString()))
             {
                 continue;
             }
@@ -105,6 +112,7 @@ public class CancelBatchJobTest
                 break;
             }
         }
+
         string jobName = retrievedResponse.Metadata.Job.Name;
         return jobName;
     }

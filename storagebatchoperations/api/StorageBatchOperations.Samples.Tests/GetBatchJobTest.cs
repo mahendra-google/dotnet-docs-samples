@@ -28,22 +28,26 @@ public class GetBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
             PrefixList = _prefixListObject
         };
+
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void GetBatchJob()
+    public void TestGetBatchJob()
     {
         GetBatchJobSample getJob = new GetBatchJobSample();
-        var jobId = _fixture.GenerateJobId();
         CreateBatchJobSample createJob = new CreateBatchJobSample();
+
+        var jobId = _fixture.GenerateGuid();
         var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var getCreatedJob = getJob.GetBatchJob(createdJob.Name);
+
         Assert.Equal(createdJob.Name, getCreatedJob.Name);
         Assert.Equal(createdJob.BucketList, getCreatedJob.BucketList);
         Assert.Equal(createdJob.TransformationCase.ToString(), getCreatedJob.TransformationCase.ToString());

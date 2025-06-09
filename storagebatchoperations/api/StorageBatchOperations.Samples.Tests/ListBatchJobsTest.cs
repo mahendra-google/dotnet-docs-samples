@@ -28,25 +28,30 @@ public class ListBatchJobsTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
             PrefixList = _prefixListObject
         };
+
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void ListBatchJobs()
+    public void TestListBatchJobs()
     {
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
+        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+
         string filter = "state:succeeded";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
-        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+
+        var jobId = _fixture.GenerateGuid();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
+
         Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State && job.SourceCase == createdJob.SourceCase && job.TransformationCase == createdJob.TransformationCase);
         Assert.All(batchJobs, AssertBatchJob);
         _fixture.DeleteBatchJob(createdJob.Name);
