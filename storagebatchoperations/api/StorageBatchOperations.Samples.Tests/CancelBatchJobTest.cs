@@ -112,7 +112,7 @@ public class CancelBatchJobTest
         while (true)
         {
             retrievedResponse = retrievedResponse.PollOnce();
-            if (string.IsNullOrEmpty(retrievedResponse.Metadata.ToString()))
+            if (string.IsNullOrEmpty(retrievedResponse.Metadata.Job.Name.ToString()))
             {
                 continue;
             }
@@ -121,6 +121,7 @@ public class CancelBatchJobTest
                 break;
             }
         }
+
         string jobName = retrievedResponse.Metadata.Job.Name;
         return jobName;
     }

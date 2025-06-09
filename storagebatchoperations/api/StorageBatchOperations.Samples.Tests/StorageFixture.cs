@@ -16,6 +16,7 @@ using Google.Api.Gax.ResourceNames;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Storage.v1.Data;
 using Google.Cloud.Storage.V1;
+using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,6 +30,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     public IList<string> TempBucketNames { get; } = [];
     public string ServiceAccountEmail { get; } = "gcs-iam-acl-test@dotnet-docs-samples-tests.iam.gserviceaccount.com";
     public StorageClient Client { get; }
+    public StorageBatchOperationsClient OperationsClient { get; }
     public LocationName LocationName { get; }
 
     public StorageFixture()
@@ -40,6 +42,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         }
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Client = StorageClient.Create();
+        OperationsClient = StorageBatchOperationsClient.Create();
     }
 
     /// <summary>
@@ -97,11 +100,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     /// <summary>
     /// Deletes the batch job at the end of the test.
     /// </summary>
-    internal void DeleteBatchJob(string jobName)
-    {
-        DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
-        deleteBatchJob.DeleteBatchJob(jobName);
-    }
+    internal void DeleteBatchJob(string jobName) => OperationsClient.DeleteJob(jobName);
 
     public void Dispose()
     {

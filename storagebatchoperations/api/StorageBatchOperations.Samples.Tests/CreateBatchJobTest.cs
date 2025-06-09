@@ -44,6 +44,7 @@ public class CreateBatchJobTest
         MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
         // Uploading an object to the bucket
         _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
+
         byte[] byteManifestObjectContent = Encoding.UTF8.GetBytes(manifestObjectContent);
         // Uploading a manifest object to the manifest bucket
         MemoryStream streamManifestObjectContent = new MemoryStream(byteManifestObjectContent);
