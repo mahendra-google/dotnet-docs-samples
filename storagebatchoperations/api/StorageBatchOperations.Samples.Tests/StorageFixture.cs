@@ -71,22 +71,10 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     internal string GenerateBucketName() => Guid.NewGuid().ToString();
 
     /// <summary>
-    /// Generate the Id of the job.
+    /// Generates a new globally unique identifier (GUID).
     /// </summary>
-    /// <returns>The jobId.</returns>
-    internal string GenerateJobId() => Guid.NewGuid().ToString();
-
-    /// <summary>
-    /// Generate the name of the object.
-    /// </summary>
-    /// <returns>The objectName.</returns>
-    internal string GenerateName() => Guid.NewGuid().ToString();
-
-    /// <summary>
-    /// Generate the content of the object.
-    /// </summary>
-    /// <returns>The objectContent.</returns>
-    internal string GenerateContent() => Guid.NewGuid().ToString();
+    /// <returns>A new randomly generated GUID as string.</returns>
+    internal string GenerateGuid() => Guid.NewGuid().ToString();
 
     /// <summary>
     /// Bucket creation/update/deletion is rate-limited. To avoid making the tests flaky, we sleep after each operation.

@@ -15,7 +15,6 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Cloud.StorageBatchOperations.V1;
 using Google.LongRunning;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -35,48 +34,63 @@ public class CancelBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         while (i >= 0)
         {
-            var objectName = _fixture.GenerateName();
-            var objectContent = _fixture.GenerateContent();
+            var objectName = _fixture.GenerateGuid();
+            var objectContent = _fixture.GenerateGuid();
             byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
             MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
             _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
             i--;
         }
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
-            PrefixList = _prefixListObject
+            // The prefix list is used to specify the objects to be deleted. To match all objects, use an empty list.
+            PrefixList = _prefixListObject 
         };
+        // Adding the bucket to the bucket list.
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void CancelBatchJob()
+    public void TestCancelBatchJob()
     {
         CancelBatchJobSample cancelBatchJob = new CancelBatchJobSample();
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         GetBatchJobSample getBatchJob = new GetBatchJobSample();
+
         string filter = "state:canceled";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
+
+        var jobId = _fixture.GenerateGuid();
         var createdJob = CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
-        var jobResponse = cancelBatchJob.CancelBatchJob(createdJob);
+
+        var cancelJobResponse = cancelBatchJob.CancelBatchJob(createdJob);
         PollUntilCancelled();
+
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
-        Assert.Contains(batchJobs, job => job.Name == createdJob);
+        Assert.Contains(batchJobs, job => job.Name == createdJob && job.State == Job.Types.State.Canceled);
+
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
         Assert.Equal("Canceled", cancelledJob.State.ToString());
+        // Clean up by deleting the created job.
         _fixture.DeleteBatchJob(createdJob);
     }
 
+    /// <summary>
+    /// Creates a batch job to cancel storage batch job operation.
+    /// </summary>
     public static string CreateBatchJob(LocationName locationName,
         BucketList bucketList,
         string jobId = "12345678910")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        StorageBatchOperationsClient storageBatchClient = StorageBatchOperationsClient.Create();
+
+        // Creates a batch job with the specified bucket list and delete object settings.
         CreateJobRequest request = new CreateJobRequest
         {
             ParentAsLocationName = locationName,
@@ -89,10 +103,12 @@ public class CancelBatchJobTest
             RequestId = jobId,
         };
 
-        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
+        Operation<Job, OperationMetadata> response = storageBatchClient.CreateJob(request);
         string operationName = response.Name;
-        Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
 
+        Operation<Job, OperationMetadata> retrievedResponse = storageBatchClient.PollOnceCreateJob(operationName);
+
+        // Poll until the storage batch job operation is complete.
         while (true)
         {
             retrievedResponse = retrievedResponse.PollOnce();

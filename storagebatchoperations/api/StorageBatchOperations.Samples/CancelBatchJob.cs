@@ -25,13 +25,17 @@ public class CancelBatchJobSample
     /// <param name="jobName">The name of the job to cancel. Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
     public CancelJobResponse CancelBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        // Create a StorageBatchOperationsClient instance to interact with the Storage Batch Operations API.
+        StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
+        // Create a request to cancel the job.
         CancelJobRequest request = new CancelJobRequest
         {
             Name = jobName,
             RequestId = jobName
         };
-        var response = storageBatchOperationsClient.CancelJob(request);
+        // Cancel the job.
+        var response = operationsClient.CancelJob(request);
+        // Print confirmation message that job is cancelled.
         Console.WriteLine($"The Storage Batch Operation Job (Name: {jobName}) is cancelled");
         return response;
     }

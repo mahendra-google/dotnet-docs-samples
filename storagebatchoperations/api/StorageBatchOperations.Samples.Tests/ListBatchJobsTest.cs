@@ -28,30 +28,41 @@ public class ListBatchJobsTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+        
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
+            // The prefix list is used to specify the objects to be processed. To match all objects, use an empty list.
             PrefixList = _prefixListObject
         };
+        // Adding the bucket to the bucket list.
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void ListBatchJobs()
+    public void TestListBatchJobs()
     {
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
+        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+        // Filter to list only succeeded jobs
         string filter = "state:succeeded";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
-        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+        // Generate a unique job ID for the batch job
+        var jobId = _fixture.GenerateGuid();
+        
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+        // List batch jobs with the specified filter, page size, and order by criteria
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
+        // Assert that the created job is in the list of batch jobs.
         Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State && job.SourceCase == createdJob.SourceCase && job.TransformationCase == createdJob.TransformationCase);
+        // Assert that all batch jobs have the required properties.
         Assert.All(batchJobs, AssertBatchJob);
+        // Clean up by deleting the created job.
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 
+    // Helper method to assert that a batch job has the required properties.
     private void AssertBatchJob(Job b)
     {
         Assert.NotNull(b.Name);

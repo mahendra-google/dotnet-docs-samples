@@ -28,29 +28,39 @@ public class DeleteBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
+            // The prefix list is used to specify the objects to be deleted. To match all objects, use an empty list.
             PrefixList = _prefixListObject
         };
+        // Adding the bucket to the bucket list.
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void DeleteBatchJob()
+    public void TestDeleteBatchJob()
     {
         DeleteBatchJobSample deleteBatchJob = new DeleteBatchJobSample();
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         GetBatchJobSample getBatchJob = new GetBatchJobSample();
+        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+
         string filter = "";
         int pageSize = 10;
         string orderBy = "create_time";
-        var jobId = _fixture.GenerateJobId();
-        CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+
+        // Generate a unique job ID for the batch job
+        var jobId = _fixture.GenerateGuid();
+        
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+        // Delete the created job.
         deleteBatchJob.DeleteBatchJob(createdJob.Name);
+        // Verify that the job is deleted.
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         Assert.DoesNotContain(batchJobs, job => job.JobName == createdJob.JobName);
+        // Attempt to get the deleted job, which should throw an exception.
         var exception = Assert.Throws<Grpc.Core.RpcException>(() => getBatchJob.GetBatchJob(createdJob.Name));
         Assert.Equal(Grpc.Core.StatusCode.NotFound, exception.StatusCode);
     }

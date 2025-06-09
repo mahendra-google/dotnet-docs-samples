@@ -31,16 +31,21 @@ public class CreateBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         var manifestBucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(manifestBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-        var objectName = _fixture.GenerateName();
-        var manifestObjectName = _fixture.GenerateName();
-        var objectContent = _fixture.GenerateContent();
+
+        var objectName = _fixture.GenerateGuid();
+        var manifestObjectName = _fixture.GenerateGuid();
+        var objectContent = _fixture.GenerateGuid();
         var manifestObjectContent = $"bucket,name,generation{Environment.NewLine}{bucketName},{objectName}";
+
         byte[] byteObjectContent = Encoding.UTF8.GetBytes(objectContent);
         MemoryStream streamObjectContent = new MemoryStream(byteObjectContent);
+        // Uploading an object to the bucket
         _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
         byte[] byteManifestObjectContent = Encoding.UTF8.GetBytes(manifestObjectContent);
+        // Uploading a manifest object to the manifest bucket
         MemoryStream streamManifestObjectContent = new MemoryStream(byteManifestObjectContent);
         _fixture.Client.UploadObject(manifestBucketName, $"{manifestObjectName}.csv", "text/csv", streamManifestObjectContent);
 
@@ -48,29 +53,50 @@ public class CreateBatchJobTest
         {
             Bucket_ = bucketName,
             PrefixList = _prefixListObject,
+            // Manifest location contains csv file having list of objects to be transformed"
             Manifest = new Manifest { ManifestLocation = $"gs://{manifestBucketName}/{manifestObjectName}.csv" }
         };
+        // Adding the bucket to the bucket list.
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void CreateBatchJob()
+    public void TestCreateBatchJob()
     {
         CreateBatchJobSample createJob = new CreateBatchJobSample();
-        var jobId = _fixture.GenerateJobId();
+        var jobId = _fixture.GenerateGuid();
         var jobTransformationCase = "DeleteObject";
         var holdState = "EventBasedHoldSet";
         string jobType;
+
+        // If the job transformation case is PutObjectHold, we can set the hold state to EventBasedHoldSet or EventBasedHoldUnSet or TemporaryHoldSet or TemporaryHoldUnSet.
         if (jobTransformationCase == "PutObjectHold")
         {
             jobType = $"{jobTransformationCase}{holdState}";
         }
+        // If the job transformation case is other than PutObjectHold, we dont set the hold state.
         else
         {
             jobType = jobTransformationCase;
         }
-
+        // If the job transformation case is RewriteObject, we can set the KmsKey.
+        // If the job transformation case is PutMetadata, we can set the CacheControl, ContentDisposition, ContentEncoding, ContentLanguage, ContentType and CustomTime.
+        if (jobTransformationCase == "RewriteObject")
+        {
+            //createJob.RewriteObject.KmsKey = $"projects/{_fixture.ProjectId}/locations/{_fixture.LocationId}/keyRings/{_fixture.KeyRingName}/cryptoKeys/{_fixture.CryptoKeyName}";
+        }
+        else if (jobTransformationCase == "PutMetadata")
+        {
+            //createJob.PutMetadata.CacheControl = "no-cache";
+            //createJob.PutMetadata.ContentDisposition = "inline";
+            //createJob.PutMetadata.ContentEncoding = "gzip";
+            //createJob.PutMetadata.ContentLanguage = "en-US";
+            //createJob.PutMetadata.ContentType = "text/plain";
+            //createJob.PutMetadata.CustomTime = DateTime.UtcNow.ToString("o");
+        }
+        // Create a batch job with the specified transformation case and bucket list
         var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType);
+       
         Assert.Equal(createdBatchJob.BucketList, _bucketList);
         Assert.Equal(createdBatchJob.TransformationCase.ToString(), jobTransformationCase);
         Assert.Equal(createdBatchJob.SourceCase.ToString(), _bucketList.GetType().Name);
@@ -78,5 +104,7 @@ public class CreateBatchJobTest
         Assert.NotNull(createdBatchJob.JobName);
         Assert.NotNull(createdBatchJob.CreateTime);
         Assert.NotNull(createdBatchJob.CompleteTime);
+        // Clean up by deleting the created job.
+        _fixture.DeleteBatchJob(createdBatchJob.Name);
     }
 }

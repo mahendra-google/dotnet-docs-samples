@@ -28,22 +28,28 @@ public class GetBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
+            // The prefix list is used to specify the objects to be deleted. To match all objects, use an empty list.
             PrefixList = _prefixListObject
         };
+        // Adding the bucket to the bucket list.
         _bucketList.Buckets.Insert(0, _bucket);
     }
 
     [Fact]
-    public void GetBatchJob()
+    public void TestGetBatchJob()
     {
         GetBatchJobSample getJob = new GetBatchJobSample();
-        var jobId = _fixture.GenerateJobId();
+        var jobId = _fixture.GenerateGuid();
         CreateBatchJobSample createJob = new CreateBatchJobSample();
+        // Create a batch job with the specified bucket list and job ID.
         var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
+        // Get the created job using its name.
         var getCreatedJob = getJob.GetBatchJob(createdJob.Name);
+        // Assert that the retrieved job matches the created job.
         Assert.Equal(createdJob.Name, getCreatedJob.Name);
         Assert.Equal(createdJob.BucketList, getCreatedJob.BucketList);
         Assert.Equal(createdJob.TransformationCase.ToString(), getCreatedJob.TransformationCase.ToString());
@@ -54,6 +60,7 @@ public class GetBatchJobTest
         Assert.Equal(createdJob.CompleteTime, getCreatedJob.CompleteTime);
         Assert.Equal(createdJob.CreateTime, getCreatedJob.CreateTime);
         Assert.Equal(createdJob.Counters, getCreatedJob.Counters);
+        // Clean up by deleting the created job.
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 }

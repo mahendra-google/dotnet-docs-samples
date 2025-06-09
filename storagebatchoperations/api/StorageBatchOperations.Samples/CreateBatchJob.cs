@@ -40,7 +40,8 @@ public class CreateBatchJobSample
         string jobId = "12345678910",
         string jobType = "DeleteObject")
     {
-        StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
+        // Create a StorageBatchOperationsClient instance to interact with the Storage Batch Operations API.
+        StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
 
         if (jobType == "RewriteObject")
         {
@@ -113,6 +114,7 @@ public class CreateBatchJobSample
             };
         }
 
+        // Create a job request with the specified location, job ID, and job details.
         CreateJobRequest request = new CreateJobRequest
         {
             ParentAsLocationName = locationName,
@@ -121,18 +123,17 @@ public class CreateBatchJobSample
             RequestId = jobId,
         };
 
-        Operation<Job, OperationMetadata> response = storageBatchOperationsClient.CreateJob(request);
+        Operation<Job, OperationMetadata> response = operationsClient.CreateJob(request);
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
 
         Job result = completedResponse.Result;
-        string operationName = response.Name;
-        Operation<Job, OperationMetadata> retrievedResponse = storageBatchOperationsClient.PollOnceCreateJob(operationName);
 
-        if (retrievedResponse.IsCompleted)
+        if (completedResponse.IsCompleted)
         {
-            Job retrievedResult = retrievedResponse.Result;
+            Job retrievedResult = completedResponse.Result;
             return retrievedResult;
         }
+        // Print confirmation message that job is created.
         Console.WriteLine($"The Storage Batch Operation Job (Name: {result.Name}) is created");
         return result;
     }
