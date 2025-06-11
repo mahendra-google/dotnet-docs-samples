@@ -44,6 +44,7 @@ public class ListBatchJobsTest
     {
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         CreateBatchJobSample createBatchJob = new CreateBatchJobSample();
+
         // Filter to list only succeeded jobs
         string filter = "state:succeeded";
         int pageSize = 10;
@@ -56,12 +57,12 @@ public class ListBatchJobsTest
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         // Assert that the created job is in the list of batch jobs.
         Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State && job.SourceCase == createdJob.SourceCase && job.TransformationCase == createdJob.TransformationCase);
-        // Assert that all batch jobs have the required properties.
+        // Assert that all batch jobs have the required metadata.
         Assert.All(batchJobs, AssertBatchJob);
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 
-    // Helper method to assert that a batch job has the required properties.
+    // Validates if a batch job has all required metadata.
     private void AssertBatchJob(Job b)
     {
         Assert.NotNull(b.Name);

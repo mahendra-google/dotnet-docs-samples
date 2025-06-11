@@ -43,23 +43,28 @@ public class GetBatchJobTest
     public void TestGetBatchJob()
     {
         GetBatchJobSample getJob = new GetBatchJobSample();
-        var jobId = _fixture.GenerateGuid();
         CreateBatchJobSample createJob = new CreateBatchJobSample();
+
+        // Generate a unique job ID for the batch job.
+        var jobId = _fixture.GenerateGuid();
         // Create a batch job with the specified bucket list and job ID.
         var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         // Get the created job using its name.
-        var getCreatedJob = getJob.GetBatchJob(createdJob.Name);
-        // Assert that the retrieved job matches the created job.
-        Assert.Equal(createdJob.Name, getCreatedJob.Name);
-        Assert.Equal(createdJob.BucketList, getCreatedJob.BucketList);
-        Assert.Equal(createdJob.TransformationCase.ToString(), getCreatedJob.TransformationCase.ToString());
-        Assert.Equal(createdJob.SourceCase.ToString(), getCreatedJob.SourceCase.ToString());
-        Assert.Equal(createdJob.State, getCreatedJob.State);
-        Assert.Equal(createdJob.Description, getCreatedJob.Description);
-        Assert.Equal(createdJob.ScheduleTime, getCreatedJob.ScheduleTime);
-        Assert.Equal(createdJob.CompleteTime, getCreatedJob.CompleteTime);
-        Assert.Equal(createdJob.CreateTime, getCreatedJob.CreateTime);
-        Assert.Equal(createdJob.Counters, getCreatedJob.Counters);
+        var retrievedJob = getJob.GetBatchJob(createdJob.Name);
+
+        // Assert that the retrieved job is not null.
+        Assert.NotNull(retrievedJob);
+        // Assert that the retrieved job's metadata matches with the created job's metadata.
+        Assert.Equal(createdJob.Name, retrievedJob.Name);
+        Assert.Equal(createdJob.BucketList, retrievedJob.BucketList);
+        Assert.Equal(createdJob.TransformationCase.ToString(), retrievedJob.TransformationCase.ToString());
+        Assert.Equal(createdJob.SourceCase.ToString(), retrievedJob.SourceCase.ToString());
+        Assert.Equal(createdJob.State, retrievedJob.State);
+        Assert.Equal(createdJob.Description, retrievedJob.Description);
+        Assert.Equal(createdJob.ScheduleTime, retrievedJob.ScheduleTime);
+        Assert.Equal(createdJob.CompleteTime, retrievedJob.CompleteTime);
+        Assert.Equal(createdJob.CreateTime, retrievedJob.CreateTime);
+        Assert.Equal(createdJob.Counters, retrievedJob.Counters);
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 }

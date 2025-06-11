@@ -122,12 +122,6 @@ public class CreateBatchJobSample
         Operation<Job, OperationMetadata> completedResponse = response.PollUntilCompleted();
 
         Job result = completedResponse.Result;
-
-        if (completedResponse.IsCompleted)
-        {
-            Job retrievedResult = completedResponse.Result;
-            return retrievedResult;
-        }
         Console.WriteLine($"The Storage Batch Operation Job (Name: {result.Name}) is created");
         return result;
     }
