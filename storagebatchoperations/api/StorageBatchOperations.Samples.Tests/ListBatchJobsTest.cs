@@ -58,7 +58,6 @@ public class ListBatchJobsTest
         Assert.Contains(batchJobs, job => job.JobName == createdJob.JobName && job.State == createdJob.State && job.SourceCase == createdJob.SourceCase && job.TransformationCase == createdJob.TransformationCase);
         // Assert that all batch jobs have the required properties.
         Assert.All(batchJobs, AssertBatchJob);
-        // Clean up by deleting the created job.
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 

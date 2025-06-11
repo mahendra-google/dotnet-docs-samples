@@ -60,7 +60,6 @@ public class GetBatchJobTest
         Assert.Equal(createdJob.CompleteTime, getCreatedJob.CompleteTime);
         Assert.Equal(createdJob.CreateTime, getCreatedJob.CreateTime);
         Assert.Equal(createdJob.Counters, getCreatedJob.Counters);
-        // Clean up by deleting the created job.
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 }

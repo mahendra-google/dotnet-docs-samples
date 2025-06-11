@@ -77,7 +77,6 @@ public class CancelBatchJobTest
 
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
         Assert.Equal("Canceled", cancelledJob.State.ToString());
-        // Clean up by deleting the created job.
         _fixture.DeleteBatchJob(createdJob);
     }
 

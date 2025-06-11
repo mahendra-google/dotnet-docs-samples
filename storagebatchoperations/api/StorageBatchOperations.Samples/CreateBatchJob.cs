@@ -21,8 +21,6 @@ using System;
 
 public class CreateBatchJobSample
 {
-    private RewriteObject _rewriteObject;
-    private PutMetadata _putMetadata;
     private DeleteObject _deleteObject;
     private PutObjectHold _putObjectHold;
     private Job _job;
@@ -35,31 +33,28 @@ public class CreateBatchJobSample
     /// <param name="jobId">It is id for the job and it should not be more than 128 characters and must include only
     /// characters available in DNS names, as defined by RFC-1123.</param>
     /// <param name="jobType">It is type of storage batch operation job.</param>
+    /// <param name="jobTransformationObject">It is object of type either RewriteObject or PutMetadata.</param>
     public Job CreateBatchJob(LocationName locationName,
         BucketList bucketList,
         string jobId = "12345678910",
-        string jobType = "DeleteObject")
+        string jobType = "DeleteObject",
+        object jobTransformationObject = null)
     {
-        // Create a StorageBatchOperationsClient instance to interact with the Storage Batch Operations API.
         StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
 
         if (jobType == "RewriteObject")
         {
-            _rewriteObject = new RewriteObject { KmsKey = "projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}" };
-
             _job = new Job
             {
-                RewriteObject = _rewriteObject,
+                RewriteObject = (RewriteObject) jobTransformationObject,
                 BucketList = bucketList
             };
         }
         else if (jobType == "PutMetadata")
         {
-            _putMetadata = new PutMetadata { CacheControl = "", ContentDisposition = "", ContentEncoding = "", ContentLanguage = "", ContentType = "", CustomTime = "" };
-
             _job = new Job
             {
-                PutMetadata = _putMetadata,
+                PutMetadata = (PutMetadata) jobTransformationObject,
                 BucketList = bucketList
             };
         }
@@ -133,7 +128,6 @@ public class CreateBatchJobSample
             Job retrievedResult = completedResponse.Result;
             return retrievedResult;
         }
-        // Print confirmation message that job is created.
         Console.WriteLine($"The Storage Batch Operation Job (Name: {result.Name}) is created");
         return result;
     }

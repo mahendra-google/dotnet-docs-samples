@@ -25,7 +25,6 @@ public class GetBatchJobSample
     /// <param name="jobName">The name of the job to get. Format: projects/{project_id}/locations/{location_id}/jobs/{job_id}.</param>
     public Job GetBatchJob(string jobName = "projects/{project_id}/locations/{location_id}/jobs/{job_id}")
     {
-        // Create a StorageBatchOperationsClient instance to interact with the Storage Batch Operations API.
         StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
         // Create a request to get the job.
         GetJobRequest request = new GetJobRequest
@@ -34,7 +33,6 @@ public class GetBatchJobSample
         };
         // Get the job.
         var response = operationsClient.GetJob(request);
-        // Print the job details.
         Console.WriteLine($"The Name of Storage Batch Operation Job is : {response.Name}");
         return response;
     }

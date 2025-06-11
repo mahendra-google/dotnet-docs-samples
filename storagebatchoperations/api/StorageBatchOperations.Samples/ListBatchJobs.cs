@@ -34,7 +34,6 @@ public class ListBatchJobsSample
         int pageSize = 100,
         string orderBy = "name")
     {
-        // Create a StorageBatchOperationsClient instance to interact with the Storage Batch Operations API.
         StorageBatchOperationsClient storageBatchOperationsClient = StorageBatchOperationsClient.Create();
         // Create a request to list the batch jobs.
         ListJobsRequest request = new ListJobsRequest
@@ -45,7 +44,6 @@ public class ListBatchJobsSample
         };
 
         PagedEnumerable<ListJobsResponse, Job> response = storageBatchOperationsClient.ListJobs(request);
-        // Print the total number of jobs.
         Console.WriteLine("Storage Batch Operation Jobs are as follows:");
 
         foreach (var item in response)
@@ -55,7 +53,6 @@ public class ListBatchJobsSample
 
         // Retrieve a single page of known size
         Page<Job> singlePage = response.ReadPage(pageSize);
-        // Print the total number of jobs in a single page of known size.
         Console.WriteLine($"A single page of {pageSize} page size of Storage Batch Operation Jobs are as follows:");
 
         foreach (Job item in singlePage)
