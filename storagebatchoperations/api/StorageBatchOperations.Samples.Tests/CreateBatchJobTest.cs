@@ -71,7 +71,7 @@ public class CreateBatchJobTest
         var jobId = _fixture.GenerateGuid();
         var jobTransformationCase = "PutMetadata";
         var holdState = "EventBasedHoldSet";
-        var jobTransformationObject =  new object();
+        var jobTransformationObject = new object();
         string jobType;
 
         // If the job transformation case is PutObjectHold, we can set the hold state to EventBasedHoldSet or EventBasedHoldUnSet or TemporaryHoldSet or TemporaryHoldUnSet.
