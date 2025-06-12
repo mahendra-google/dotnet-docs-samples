@@ -45,16 +45,13 @@ public class ListBatchJobsSample
 
         PagedEnumerable<ListJobsResponse, Job> response = operationsClient.ListJobs(request);
         Console.WriteLine("Storage Batch Operation Jobs are as follows:");
-
         foreach (var item in response)
         {
             Console.WriteLine(item);
         }
-
         // Retrieve a single page of known size
         Page<Job> singlePage = response.ReadPage(pageSize);
         Console.WriteLine($"A single page of {pageSize} page size of Storage Batch Operation Jobs are as follows:");
-
         foreach (Job item in singlePage)
         {
             Console.WriteLine(item);

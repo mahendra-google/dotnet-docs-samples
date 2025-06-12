@@ -104,7 +104,6 @@ public class CreateBatchJobTest
         }
         // Create a batch job with the specified transformation case and bucket list
         var createdBatchJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId, jobType, jobTransformationObject);
-       
         Assert.Equal(createdBatchJob.BucketList, _bucketList);
         Assert.Equal(createdBatchJob.TransformationCase.ToString(), jobTransformationCase);
         Assert.Equal(createdBatchJob.SourceCase.ToString(), _bucketList.GetType().Name);

@@ -31,7 +31,6 @@ public class DeleteBatchJobSample
         {
             Name = jobName
         };
-
         // Delete the job.
         operationsClient.DeleteJob(request);
         Console.WriteLine($"The Storage Batch Operation Job (Name : {jobName}) is deleted");

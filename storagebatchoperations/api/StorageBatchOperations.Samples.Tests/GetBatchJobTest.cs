@@ -50,7 +50,6 @@ public class GetBatchJobTest
         var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         // Get the created job using its name.
         var retrievedJob = getJob.GetBatchJob(createdJob.Name);
-
         // Assert that the retrieved job is not null.
         Assert.NotNull(retrievedJob);
         // Assert that the retrieved job's metadata matches with the created job's metadata.

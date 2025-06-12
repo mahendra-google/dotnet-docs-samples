@@ -49,7 +49,7 @@ public class ListBatchJobsTest
         string filter = "state:succeeded";
         int pageSize = 10;
         string orderBy = "create_time";
-        
+
         var jobId = _fixture.GenerateGuid();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         // List batch jobs with the specified filter, page size, and order by criteria

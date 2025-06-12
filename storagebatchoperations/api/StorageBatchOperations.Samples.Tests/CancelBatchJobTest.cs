@@ -34,7 +34,6 @@ public class CancelBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-
         while (i >= 0)
         {
             var objectName = _fixture.GenerateGuid();
@@ -44,7 +43,6 @@ public class CancelBatchJobTest
             _fixture.Client.UploadObject(bucketName, objectName, "application/text", streamObjectContent);
             i--;
         }
-
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
@@ -71,10 +69,8 @@ public class CancelBatchJobTest
 
         var cancelJobResponse = cancelBatchJob.CancelBatchJob(createdJob);
         PollUntilCancelled();
-
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         Assert.Contains(batchJobs, job => job.Name == createdJob && job.State == Job.Types.State.Canceled);
-
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
         Assert.Equal("Canceled", cancelledJob.State.ToString());
         _fixture.DeleteBatchJob(createdJob);
@@ -88,7 +84,6 @@ public class CancelBatchJobTest
         string jobId = "12345678910")
     {
         StorageBatchOperationsClient storageBatchClient = StorageBatchOperationsClient.Create();
-
         // Creates a batch job with the specified bucket list and delete object settings.
         CreateJobRequest request = new CreateJobRequest
         {
@@ -104,9 +99,7 @@ public class CancelBatchJobTest
 
         Operation<Job, OperationMetadata> response = storageBatchClient.CreateJob(request);
         string operationName = response.Name;
-
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchClient.PollOnceCreateJob(operationName);
-
         // Poll until the storage batch job operation is complete.
         while (true)
         {
