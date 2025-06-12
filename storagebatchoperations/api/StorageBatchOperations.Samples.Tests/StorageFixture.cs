@@ -45,8 +45,8 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Client = StorageClient.Create();
         OperationsClient = StorageBatchOperationsClient.Create();
-        KeyRingId = Environment.GetEnvironmentVariable("GOOGLE_KMS_KEYRING_ID");
-        CryptoKeyId = Environment.GetEnvironmentVariable("GOOGLE_KMS_CRYPTOKEY_ID");
+        KeyRingId = string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GOOGLE_KMS_KEYRING_ID")) ? GenerateGuid() : Environment.GetEnvironmentVariable("GOOGLE_KMS_KEYRING_ID");
+        CryptoKeyId = string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GOOGLE_KMS_CRYPTOKEY_ID")) ? GenerateGuid() : Environment.GetEnvironmentVariable("GOOGLE_KMS_CRYPTOKEY_ID");
     }
 
     /// <summary>
