@@ -28,7 +28,6 @@ public class GetBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
-
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,

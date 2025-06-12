@@ -34,6 +34,7 @@ public class CancelBatchJobTest
         _fixture = fixture;
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+        // Uploading objects to the bucket.
         while (i >= 0)
         {
             var objectName = _fixture.GenerateGuid();
@@ -66,12 +67,12 @@ public class CancelBatchJobTest
 
         var jobId = _fixture.GenerateGuid();
         var createdJob = CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
-
         var cancelJobResponse = cancelBatchJob.CancelBatchJob(createdJob);
         PollUntilCancelled();
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
         Assert.Contains(batchJobs, job => job.Name == createdJob && job.State == Job.Types.State.Canceled);
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
+        Assert.Equal(createdJob, cancelledJob.Name.ToString());
         Assert.Equal("Canceled", cancelledJob.State.ToString());
         _fixture.DeleteBatchJob(createdJob);
     }
@@ -100,7 +101,7 @@ public class CancelBatchJobTest
         Operation<Job, OperationMetadata> response = storageBatchClient.CreateJob(request);
         string operationName = response.Name;
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchClient.PollOnceCreateJob(operationName);
-        // Poll until the storage batch job operation is complete.
+        // Poll until we get storage batch operation job name.
         while (true)
         {
             retrievedResponse = retrievedResponse.PollOnce();

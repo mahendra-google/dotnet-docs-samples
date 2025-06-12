@@ -41,7 +41,6 @@ public class CreateBatchJobSample
         object jobTransformationObject = null)
     {
         StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
-
         if (jobType == "RewriteObject")
         {
             _job = new Job

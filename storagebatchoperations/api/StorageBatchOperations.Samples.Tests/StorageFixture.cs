@@ -46,7 +46,7 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         Client = StorageClient.Create();
         OperationsClient = StorageBatchOperationsClient.Create();
         KmsKey = "projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}";
-        CryptoKeyName = new CryptoKeyName(ProjectId, LocationId, "keyring", "key");
+        CryptoKeyName = new CryptoKeyName(ProjectId, LocationId, "keyringid", "cryptokeyid");
     }
 
     /// <summary>

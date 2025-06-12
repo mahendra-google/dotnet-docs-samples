@@ -49,7 +49,6 @@ public class CreateBatchJobTest
         // Uploading a manifest object to the manifest bucket
         MemoryStream streamManifestObjectContent = new MemoryStream(byteManifestObjectContent);
         _fixture.Client.UploadObject(manifestBucketName, $"{manifestObjectName}.csv", "text/csv", streamManifestObjectContent);
-
         _bucket = new BucketList.Types.Bucket
         {
             Bucket_ = bucketName,
