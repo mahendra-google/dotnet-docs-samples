@@ -32,8 +32,8 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
     public StorageClient Client { get; }
     public StorageBatchOperationsClient OperationsClient { get; }
     public LocationName LocationName { get; }
-    public string KmsKey { get; }
-    public CryptoKeyName CryptoKeyName { get; }
+    public string KeyRingId { get; }
+    public string CryptoKeyId { get; }
 
     public StorageFixture()
     {
@@ -45,8 +45,8 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Client = StorageClient.Create();
         OperationsClient = StorageBatchOperationsClient.Create();
-        KmsKey = "projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}";
-        CryptoKeyName = new CryptoKeyName(ProjectId, LocationId, "keyringid", "cryptokeyid");
+        KeyRingId = Environment.GetEnvironmentVariable("GOOGLE_KMS_KEYRING_ID");
+        CryptoKeyId = Environment.GetEnvironmentVariable("GOOGLE_KMS_CRYPTOKEY_ID");
     }
 
     /// <summary>

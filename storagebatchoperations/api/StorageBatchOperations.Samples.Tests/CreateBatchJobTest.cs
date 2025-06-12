@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 
+using Google.Cloud.Storage.V1;
 using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.IO;
@@ -25,10 +26,13 @@ public class CreateBatchJobTest
     private readonly BucketList.Types.Bucket _bucket = new();
     private readonly BucketList _bucketList = new();
     private readonly PrefixList _prefixListObject = new();
-
+    private readonly string _kmsKey;
+    private readonly CryptoKeyName _cryptoKeyName;
     public CreateBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
+        _kmsKey = $"projects/{_fixture.ProjectId}/locations/{_fixture.LocationId}/keyRings/{_fixture.KeyRingId}/cryptoKeys/{_fixture.CryptoKeyId}";
+        _cryptoKeyName = CryptoKeyName.FromProjectLocationKeyRingCryptoKey(_fixture.ProjectId, _fixture.LocationId, _fixture.KeyRingId, _fixture.CryptoKeyId);
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
 
@@ -83,7 +87,7 @@ public class CreateBatchJobTest
         // If the job transformation case is RewriteObject, we can set the KmsKey and KmsKeyAsCryptoKeyName.
         if (jobTransformationCase == "RewriteObject")
         {
-            RewriteObject rewriteObject = new RewriteObject { KmsKey = _fixture.KmsKey, KmsKeyAsCryptoKeyName = _fixture.CryptoKeyName };
+            RewriteObject rewriteObject = new RewriteObject { KmsKey = _kmsKey, KmsKeyAsCryptoKeyName = _cryptoKeyName };
             jobTransformationObject = rewriteObject;
 
         }
