@@ -51,14 +51,12 @@ public class DeleteBatchJobTest
         int pageSize = 10;
         string orderBy = "create_time";
 
-        // Generate a unique job ID for the batch job
         var jobId = _fixture.GenerateGuid();
-        
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         // Delete the created job.
         deleteBatchJob.DeleteBatchJob(createdJob.Name);
-        // Verify that the job is deleted.
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
+        // Verify that the job is deleted.
         Assert.DoesNotContain(batchJobs, job => job.JobName == createdJob.JobName);
         // Attempt to get the deleted job, which should throw an exception.
         var exception = Assert.Throws<Grpc.Core.RpcException>(() => getBatchJob.GetBatchJob(createdJob.Name));

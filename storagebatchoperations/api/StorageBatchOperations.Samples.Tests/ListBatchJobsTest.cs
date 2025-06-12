@@ -49,9 +49,8 @@ public class ListBatchJobsTest
         string filter = "state:succeeded";
         int pageSize = 10;
         string orderBy = "create_time";
-        // Generate a unique job ID for the batch job
-        var jobId = _fixture.GenerateGuid();
         
+        var jobId = _fixture.GenerateGuid();
         var createdJob = createBatchJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         // List batch jobs with the specified filter, page size, and order by criteria
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
@@ -62,7 +61,7 @@ public class ListBatchJobsTest
         _fixture.DeleteBatchJob(createdJob.Name);
     }
 
-    // Validates if a batch job has all required metadata.
+    // Verify that a batch job has all required metadata.
     private void AssertBatchJob(Job b)
     {
         Assert.NotNull(b.Name);

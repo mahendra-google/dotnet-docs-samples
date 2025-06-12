@@ -45,7 +45,6 @@ public class GetBatchJobTest
         GetBatchJobSample getJob = new GetBatchJobSample();
         CreateBatchJobSample createJob = new CreateBatchJobSample();
 
-        // Generate a unique job ID for the batch job.
         var jobId = _fixture.GenerateGuid();
         // Create a batch job with the specified bucket list and job ID.
         var createdJob = createJob.CreateBatchJob(_fixture.LocationName, _bucketList, jobId);

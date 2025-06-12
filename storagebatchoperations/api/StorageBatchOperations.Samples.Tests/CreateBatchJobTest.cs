@@ -25,7 +25,6 @@ public class CreateBatchJobTest
     private readonly BucketList.Types.Bucket _bucket = new();
     private readonly BucketList _bucketList = new();
     private readonly PrefixList _prefixListObject = new();
-    private readonly RewriteObject _rewriteObject = new();
 
     public CreateBatchJobTest(StorageFixture fixture)
     {

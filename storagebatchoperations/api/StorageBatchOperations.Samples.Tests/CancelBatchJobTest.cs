@@ -81,7 +81,7 @@ public class CancelBatchJobTest
     }
 
     /// <summary>
-    /// Creates a batch job to cancel storage batch job operation.
+    /// Create a batch job with the specified transformation case and bucket list.
     /// </summary>
     public static string CreateBatchJob(LocationName locationName,
         BucketList bucketList,
