@@ -41,71 +41,68 @@ public class CreateBatchJobSample
         object jobTransformationObject = null)
     {
         StorageBatchOperationsClient operationsClient = StorageBatchOperationsClient.Create();
-        if (jobType == "RewriteObject")
-        {
-            _job = new Job
-            {
-                RewriteObject = (RewriteObject) jobTransformationObject,
-                BucketList = bucketList
-            };
-        }
-        else if (jobType == "PutMetadata")
-        {
-            _job = new Job
-            {
-                PutMetadata = (PutMetadata) jobTransformationObject,
-                BucketList = bucketList
-            };
-        }
-        else if (jobType == "DeleteObject")
-        {
-            _deleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true };
 
-            _job = new Job
-            {
-                DeleteObject = _deleteObject,
-                BucketList = bucketList
-            };
-        }
-        else if (jobType == "PutObjectHoldEventBasedHoldSet")
+        switch (jobType)
         {
-            _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
+            case "RewriteObject":
+                _job = new Job
+                {
+                    RewriteObject = (RewriteObject) jobTransformationObject,
+                    BucketList = bucketList
+                };
+                break;
+            case "PutMetadata":
+                _job = new Job
+                {
+                    PutMetadata = (PutMetadata) jobTransformationObject,
+                    BucketList = bucketList
+                };
+                break;
+            case "DeleteObject":
+                _deleteObject = new DeleteObject { PermanentObjectDeletionEnabled = true };
 
-            _job = new Job
-            {
-                PutObjectHold = _putObjectHold,
-                BucketList = bucketList
-            };
-        }
-        else if (jobType == "PutObjectHoldEventBasedHoldUnSet")
-        {
-            _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Unset };
+                _job = new Job
+                {
+                    DeleteObject = _deleteObject,
+                    BucketList = bucketList
+                };
+                break;
+            case "PutObjectHoldEventBasedHoldSet":
+                _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Set };
 
-            _job = new Job
-            {
-                PutObjectHold = _putObjectHold,
-                BucketList = bucketList
-            };
-        }
-        else if (jobType == "PutObjectHoldTemporaryHoldSet")
-        {
-            _putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Set };
+                _job = new Job
+                {
+                    PutObjectHold = _putObjectHold,
+                    BucketList = bucketList
+                };
+                break;
+            case "PutObjectHoldEventBasedHoldUnSet":
+                _putObjectHold = new PutObjectHold { EventBasedHold = PutObjectHold.Types.HoldStatus.Unset };
 
-            _job = new Job
-            {
-                PutObjectHold = _putObjectHold,
-                BucketList = bucketList
-            };
-        }
-        else if (jobType == "PutObjectHoldTemporaryHoldUnSet")
-        {
-            _putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Unset };
+                _job = new Job
+                {
+                    PutObjectHold = _putObjectHold,
+                    BucketList = bucketList
+                };
+                break;
+            case "PutObjectHoldTemporaryHoldSet":
+                _putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Set };
 
-            _job = new Job
-            {
-                PutObjectHold = _putObjectHold,
-                BucketList = bucketList
-            };
+                _job = new Job
+                {
+                    PutObjectHold = _putObjectHold,
+                    BucketList = bucketList
+                };
+                break;
+            case "PutObjectHoldTemporaryHoldUnSet":
+                _putObjectHold = new PutObjectHold { TemporaryHold = PutObjectHold.Types.HoldStatus.Unset };
+
+                _job = new Job
+                {
+                    PutObjectHold = _putObjectHold,
+                    BucketList = bucketList
+                };
+                break;
         }
 
         // Create a job request with the specified location, job ID, and job details.
