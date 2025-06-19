@@ -29,6 +29,7 @@ public class CreateBatchJobTest
     private string _keyRingId;
     private string _cryptoKeyId;
     private CryptoKeyName _cryptoKeyName;
+
     public CreateBatchJobTest(StorageFixture fixture)
     {
         _fixture = fixture;
