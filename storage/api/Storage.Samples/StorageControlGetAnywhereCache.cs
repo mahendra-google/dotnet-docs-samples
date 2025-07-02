@@ -25,9 +25,15 @@ public class StorageControlGetAnywhereCacheSample
     {
         // Create client
         StorageControlClient storageControlClient = StorageControlClient.Create();
-        // Make the request
-        AnywhereCache response = storageControlClient.GetAnywhereCache(cacheName);
-        Console.WriteLine($"Got anywhere cache {response.Name}");
+
+        // Create anywhere cache request
+        var request = new GetAnywhereCacheRequest
+        {
+            Name = cacheName
+        };
+
+        AnywhereCache response = storageControlClient.GetAnywhereCache(request);
+        Console.WriteLine($"Got anywhere cache : {response.Name}");
     }
 }
 // [END storage_control_get_anywhere_cache]
