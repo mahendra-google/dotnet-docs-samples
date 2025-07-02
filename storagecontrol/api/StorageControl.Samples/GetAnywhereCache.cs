@@ -15,18 +15,19 @@
 // [START storage_control_get_anywhere_cache]
 
 using Google.Cloud.Storage.Control.V2;
+using System;
 
 public class GetAnywhereCacheSample
 {
     /// <summary>Get an Anywhere Cache</summary>
-    public void GetAnywhereCache()
+    /// <param name="cacheName">The name of Anywhere Cache in the format of projects/[PROJECT]/buckets/[BUCKET]/anywhereCaches/[ANYWHERE_CACHE]</param>
+    public void GetAnywhereCache(string cacheName = "projects/[PROJECT]/buckets/[BUCKET]/anywhereCaches/[ANYWHERE_CACHE]")
     {
         // Create client
         StorageControlClient storageControlClient = StorageControlClient.Create();
-        // Initialize request argument(s)
-        string name = "projects/[PROJECT]/buckets/[BUCKET]/anywhereCaches/[ANYWHERE_CACHE]";
         // Make the request
-        AnywhereCache response = storageControlClient.GetAnywhereCache(name);
+        AnywhereCache response = storageControlClient.GetAnywhereCache(cacheName);
+        Console.WriteLine($"Got anywhere cache {response.Name}");
     }
 }
 // [END storage_control_get_anywhere_cache]
