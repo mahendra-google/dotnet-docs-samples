@@ -105,7 +105,7 @@ public class CancelBatchJobTest
         while (true)
         {
             retrievedResponse = retrievedResponse.PollOnce();
-            if (string.IsNullOrEmpty(retrievedResponse.Metadata.Job.Name.ToString()))
+            if (string.IsNullOrEmpty(retrievedResponse.Metadata?.Job.Name.ToString()))
             {
                 continue;
             }
