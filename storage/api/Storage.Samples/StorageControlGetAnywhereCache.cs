@@ -19,21 +19,25 @@ using System;
 
 public class StorageControlGetAnywhereCacheSample
 {
-    /// <summary>Get an Anywhere Cache</summary>
-    /// <param name="cacheName">The name of Anywhere Cache in the format of projects/[PROJECT]/buckets/[BUCKET]/anywhereCaches/[ANYWHERE_CACHE]</param>
-    public void StorageControlGetAnywhereCache(string cacheName = "projects/[PROJECT]/buckets/[BUCKET]/anywhereCaches/[ANYWHERE_CACHE]")
+    /// <summary>Gets an anywhere cache instance for the specified bucket.</summary>
+    /// <param name="bucketName">The name of the bucket that owns the anywhere cache instance.</param>
+    /// <param name="anywhereCacheId">The name of the zone in which the anywhere cache is located.</param>
+    public AnywhereCache StorageControlGetAnywhereCache(string bucketName = "your-bucket-name",
+        string anywhereCacheId = "us-east1-a")
     {
-        // Create client
         StorageControlClient storageControlClient = StorageControlClient.Create();
 
-        // Create anywhere cache request
+        string anywhereCacheName = $"projects/_/buckets/{bucketName}/anywhereCaches/{anywhereCacheId}";
+
         var request = new GetAnywhereCacheRequest
         {
-            Name = cacheName
+            Name = anywhereCacheName
         };
 
         AnywhereCache response = storageControlClient.GetAnywhereCache(request);
-        Console.WriteLine($"Got anywhere cache : {response.Name}");
+
+        Console.WriteLine($"Got Anywhere Cache Name: {response.Name}");
+        return response;
     }
 }
 // [END storage_control_get_anywhere_cache]
