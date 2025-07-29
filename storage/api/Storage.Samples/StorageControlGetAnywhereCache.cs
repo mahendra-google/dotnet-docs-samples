@@ -36,7 +36,7 @@ public class StorageControlGetAnywhereCacheSample
 
         AnywhereCache response = storageControlClient.GetAnywhereCache(request);
 
-        Console.WriteLine($"Got Anywhere Cache Name: {response.Name}");
+        Console.WriteLine($"Got Anywhere Cache Instance Name: {response.Name}");
         return response;
     }
 }
