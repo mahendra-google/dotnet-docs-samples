@@ -26,10 +26,6 @@ The samples requires [.NET Core 3.1][net-core] or later.  That means using
 
 * See [TESTING.md](../../TESTING.md)
 
-## Note
-
-Tests for Anywhere cache samples are not included because Anywhere Cache creation is a long running operation.
-
 [Storage]: https://cloud.google.com/storage/docs/
 [enable-api]: https://console.cloud.google.com/flows/enableapi?apiid=storage_api&showconfirmation=true
 [net-core]: https://www.microsoft.com/net/core
