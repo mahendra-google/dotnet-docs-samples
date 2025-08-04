@@ -35,10 +35,11 @@ public class StorageControlPauseAnywhereCacheSample
             Name = anywhereCacheName
         };
 
-        AnywhereCache response = storageControlClient.PauseAnywhereCache(request);
+        AnywhereCache pausedCache = storageControlClient.PauseAnywhereCache(request);
 
-        Console.WriteLine($"Paused Anywhere Cache Instance Name: {response.Name}");
-        return response;
+        Console.WriteLine($"Paused Anywhere Cache Instance: {pausedCache.Name}");
+
+        return pausedCache;
     }
 }
 // [END storage_control_pause_anywhere_cache]

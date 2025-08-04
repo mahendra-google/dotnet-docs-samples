@@ -35,10 +35,11 @@ public class StorageControlResumeAnywhereCacheSample
             Name = anywhereCacheName
         };
 
-        AnywhereCache response = storageControlClient.ResumeAnywhereCache(request);
+        AnywhereCache resumedCache = storageControlClient.ResumeAnywhereCache(request);
 
-        Console.WriteLine($"Resumed Anywhere Cache Instance Name : {response.Name}");
-        return response;
+        Console.WriteLine($"Resumed Anywhere Cache Instance: {resumedCache.Name}");
+
+        return resumedCache;
     }
 }
 // [END storage_control_resume_anywhere_cache]

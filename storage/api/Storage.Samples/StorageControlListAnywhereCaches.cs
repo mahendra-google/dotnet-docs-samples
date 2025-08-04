@@ -35,15 +35,16 @@ public class StorageControlListAnywhereCachesSample
             Parent = parent
         };
 
-        PagedEnumerable<ListAnywhereCachesResponse, AnywhereCache> response = storageControlClient.ListAnywhereCaches(request);
+        PagedEnumerable<ListAnywhereCachesResponse, AnywhereCache> anywhereCaches = storageControlClient.ListAnywhereCaches(request);
 
-        Console.WriteLine($"The Names of Anywhere Cache Instances in the Bucket ({bucketName}) are as follows:");
+        Console.WriteLine($"The Names of Anywhere Cache Instances are as follows:");
 
-        foreach (AnywhereCache cache in response)
+        foreach (AnywhereCache cache in anywhereCaches)
         {
-            Console.WriteLine($"Anywhere Cache Instance Name: {cache.Name}");
+            Console.WriteLine($"Anywhere Cache Instance: {cache.Name}");
         }
-        return response;
+
+        return anywhereCaches;
     }
 }
 // [END storage_control_list_anywhere_caches]

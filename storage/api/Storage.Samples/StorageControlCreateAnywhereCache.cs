@@ -17,6 +17,7 @@
 using Google.Cloud.Storage.Control.V2;
 using Google.LongRunning;
 using System;
+using System.Threading.Tasks;
 
 public class StorageControlCreateAnywhereCacheSample
 {
@@ -42,11 +43,14 @@ public class StorageControlCreateAnywhereCacheSample
             Parent = parent
         };
 
-        Operation<AnywhereCache, CreateAnywhereCacheMetadata> createdCacheOperation = storageControlClient.CreateAnywhereCache(request);
+        // Start a long-running operation (LRO).
+        Task<Operation<AnywhereCache, CreateAnywhereCacheMetadata>> createdCacheOperation = storageControlClient.CreateAnywhereCacheAsync(request);
 
-        var createdCache = createdCacheOperation.PollUntilCompleted();
+        // Await the LROs completion.
+        var createdCache = createdCacheOperation.Result.PollUntilCompleted();
 
-        Console.WriteLine($"Created Anywhere Cache Instance with the Name as: {createdCache.Result.AnywhereCacheName}");
+        Console.WriteLine($"Created Anywhere Cache Instance: {createdCache.Result.AnywhereCacheName}");
+
         return createdCache;
     }
 }
