@@ -24,7 +24,7 @@ public class StorageControlCreateAnywhereCacheSample
     /// <summary>Creates an anywhere cache instance in the specified bucket.</summary>
     /// <param name="bucketName">The name of the bucket.</param>
     /// <param name="zone">The zone in which the cache instance will run.</param>
-    public Operation<AnywhereCache, CreateAnywhereCacheMetadata> StorageControlCreateAnywhereCache(string bucketName = "your-bucket-name",
+    public async Task<AnywhereCache> StorageControlCreateAnywhereCacheAsync(string bucketName = "your-bucket-name",
         string zone = "us-east-a")
     {
         StorageControlClient storageControlClient = StorageControlClient.Create();
@@ -47,11 +47,11 @@ public class StorageControlCreateAnywhereCacheSample
         Task<Operation<AnywhereCache, CreateAnywhereCacheMetadata>> createdCacheOperation = storageControlClient.CreateAnywhereCacheAsync(request);
 
         // Await the LROs completion.
-        var createdCache = createdCacheOperation.Result.PollUntilCompleted();
+        var createdCache = await createdCacheOperation.Result.PollUntilCompletedAsync();
 
         Console.WriteLine($"Created Anywhere Cache Instance: {createdCache.Result.AnywhereCacheName}");
 
-        return createdCache;
+        return createdCache.Result;
     }
 }
 // [END storage_control_create_anywhere_cache]
