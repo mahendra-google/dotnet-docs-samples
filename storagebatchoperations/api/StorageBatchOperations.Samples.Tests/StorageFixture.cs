@@ -20,6 +20,7 @@ using Google.Cloud.StorageBatchOperations.V1;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 [CollectionDefinition(nameof(StorageFixture))]
@@ -43,6 +44,101 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
         LocationName = LocationName.FromProjectLocation(ProjectId, LocationId);
         Client = StorageClient.Create();
         OperationsClient = StorageBatchOperationsClient.Create();
+    }
+
+    /// <summary>
+    /// Handles retry logic for operations that may fail due to transient errors,
+    /// such as network timeouts, service unavailability, or null reference exceptions.
+    /// </summary>
+    public class RetryRobot
+    {
+        public int FirstRetryDelayMs { get; set; } = 1000;
+        public float DelayMultiplier { get; set; } = 2;
+        public int MaxTryCount { get; set; } = 7;
+        public IEnumerable<Type> RetryWhenExceptions { get; set; } = new Type[0];
+        public Func<Exception, bool> ShouldRetry { get; set; }
+
+        private static readonly Random _random = new Random();
+        private static readonly object _lock = new object();
+
+        /// <summary>
+        /// Retry action when assertion fails.
+        /// </summary>
+        /// <param name="func"></param>
+        public T Eventually<T>(Func<T> func)
+        {
+            int delayMs = FirstRetryDelayMs;
+            for (int i = 0; ; ++i)
+            {
+                try
+                {
+                    return func();
+                }
+                catch (Exception e) when (ShouldCatch(e) && i < MaxTryCount)
+                {
+                    int jitteredDelayMs;
+                    lock (_lock)
+                    {
+                        jitteredDelayMs = delayMs / 2 + (int) (_random.NextDouble() * delayMs);
+                    }
+                    Thread.Sleep(jitteredDelayMs);
+                    delayMs *= (int) DelayMultiplier;
+                }
+            }
+        }
+
+        public void Eventually(Action action) =>
+            Eventually(() =>
+            {
+                action();
+                return 0;
+            });
+
+
+        public async Task<T> Eventually<T>(Func<Task<T>> asyncFunc)
+        {
+            int delayMs = FirstRetryDelayMs;
+            for (int i = 0; ; ++i)
+            {
+                try
+                {
+                    return await asyncFunc();
+                }
+                catch (Exception e) when (ShouldCatch(e) && i < MaxTryCount)
+                {
+                    int jitteredDelayMs;
+                    lock (_lock)
+                    {
+                        jitteredDelayMs = delayMs / 2 + (int) (_random.NextDouble() * delayMs);
+                    }
+                    await Task.Delay(jitteredDelayMs);
+                    delayMs *= (int) DelayMultiplier;
+                }
+            }
+        }
+
+        public async Task Eventually(Func<Task> action) => await Eventually(async () =>
+        {
+            await action();
+            return 0;
+        });
+
+        private bool ShouldCatch(Exception e)
+        {
+            if (ShouldRetry != null)
+            {
+                return ShouldRetry(e);
+            }
+
+            foreach (Type exceptionType in RetryWhenExceptions)
+            {
+                if (exceptionType.IsAssignableFrom(e.GetType()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /// <summary>

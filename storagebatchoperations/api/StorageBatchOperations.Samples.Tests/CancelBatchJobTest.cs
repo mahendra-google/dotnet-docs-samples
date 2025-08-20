@@ -18,8 +18,9 @@ using Google.LongRunning;
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
+using static StorageFixture;
 
 [Collection(nameof(StorageFixture))]
 public class CancelBatchJobTest
@@ -49,7 +50,7 @@ public class CancelBatchJobTest
         {
             Bucket_ = bucketName,
             // The prefix list is used to specify the objects to be deleted. To match all objects, use an empty list.
-            PrefixList = _prefixListObject 
+            PrefixList = _prefixListObject
         };
         // Adding the bucket to the bucket list.
         _bucketList.Buckets.Insert(0, _bucket);
@@ -61,6 +62,10 @@ public class CancelBatchJobTest
         CancelBatchJobSample cancelBatchJob = new CancelBatchJobSample();
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         GetBatchJobSample getBatchJob = new GetBatchJobSample();
+        RetryRobot retryHandler = new RetryRobot
+        {
+            ShouldRetry = ex => ex is Xunit.Sdk.ContainsException
+        };
 
         string filter = "state:canceled";
         int pageSize = 10;
@@ -69,9 +74,8 @@ public class CancelBatchJobTest
         var jobId = _fixture.GenerateGuid();
         var createdJob = CreateBatchJob(_fixture.LocationName, _bucketList, jobId);
         var cancelJobResponse = cancelBatchJob.CancelBatchJob(createdJob);
-        PollUntilCancelled();
         var batchJobs = listBatchJobs.ListBatchJobs(_fixture.LocationName, filter, pageSize, orderBy);
-        Assert.Contains(batchJobs, job => job.Name == createdJob && job.State == Job.Types.State.Canceled);
+        retryHandler.Eventually(() => Assert.Contains(batchJobs, job => job.Name == createdJob && job.State == Job.Types.State.Canceled));
         Job cancelledJob = getBatchJob.GetBatchJob(createdJob);
         Assert.Equal(createdJob, cancelledJob.Name.ToString());
         Assert.Equal("Canceled", cancelledJob.State.ToString());
@@ -86,6 +90,11 @@ public class CancelBatchJobTest
         string jobId = "12345678910")
     {
         StorageBatchOperationsClient storageBatchClient = StorageBatchOperationsClient.Create();
+        RetryRobot retryHandler = new RetryRobot
+        {
+            ShouldRetry = ex => ex is NullReferenceException
+        };
+
         // Creates a batch job with the specified bucket list and delete object settings.
         CreateJobRequest request = new CreateJobRequest
         {
@@ -102,27 +111,9 @@ public class CancelBatchJobTest
         Operation<Job, OperationMetadata> response = storageBatchClient.CreateJob(request);
         string operationName = response.Name;
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchClient.PollOnceCreateJob(operationName);
-        // Poll until we get storage batch operation job name.
-        while (true)
-        {
-            retrievedResponse = retrievedResponse.PollOnce();
-            string name = retrievedResponse?.Metadata?.Job?.Name;
-            if (string.IsNullOrEmpty(name))
-            {
-                continue;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        string jobName = retrievedResponse.Metadata.Job.Name;
+        // Poll once asynchronously.
+        Task<Operation<Job, OperationMetadata>> retrievedAsyncResponse = retrievedResponse.PollOnceAsync();
+        string jobName = retryHandler.Eventually(() => retrievedAsyncResponse?.Result?.Metadata?.Job?.Name);
         return jobName;
     }
-
-    /// <summary>
-    /// Wait for 15 seconds until completion of cancel batch job operation.
-    /// </summary>
-    private static void PollUntilCancelled() => Thread.Sleep(15000);
 }
