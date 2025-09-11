@@ -117,25 +117,23 @@ public class StorageFixture : IDisposable, ICollectionFixture<StorageFixture>
             }
         }
 
-        public async Task Eventually(Func<Task> action) => await Eventually(async () =>
+        public async Task Eventually(Func<Task> action)
         {
-            await action();
-            return 0;
-        });
+            await Eventually(async () =>
+            {
+                await action();
+                return 0;
+            });
+        }
 
         private bool ShouldCatch(Exception e)
         {
             if (ShouldRetry != null)
-            {
                 return ShouldRetry(e);
-            }
-
             foreach (Type exceptionType in RetryWhenExceptions)
             {
                 if (exceptionType.IsAssignableFrom(e.GetType()))
-                {
                     return true;
-                }
             }
             return false;
         }
