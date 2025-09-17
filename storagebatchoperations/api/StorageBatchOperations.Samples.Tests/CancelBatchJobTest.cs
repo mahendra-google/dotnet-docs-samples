@@ -15,12 +15,12 @@
 using Google.Api.Gax.ResourceNames;
 using Google.Cloud.StorageBatchOperations.V1;
 using Google.LongRunning;
+using GoogleCloudSamples;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static StorageFixture;
 
 [Collection(nameof(StorageFixture))]
 public class CancelBatchJobTest
@@ -62,6 +62,7 @@ public class CancelBatchJobTest
         CancelBatchJobSample cancelBatchJob = new CancelBatchJobSample();
         ListBatchJobsSample listBatchJobs = new ListBatchJobsSample();
         GetBatchJobSample getBatchJob = new GetBatchJobSample();
+
         RetryRobot retryHandler = new RetryRobot
         {
             ShouldRetry = ex => ex is Xunit.Sdk.ContainsException
@@ -119,7 +120,7 @@ public class CancelBatchJobTest
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchClient.PollOnceCreateJob(operationName);
         // Poll once asynchronously.
         Task<Operation<Job, OperationMetadata>> retrievedAsyncResponse = retrievedResponse.PollOnceAsync();
-        string jobName = retrievedAsyncResponse?.Result?.Metadata?.Job?.Name ?? throw new InvalidOperationException("Job Name is Null");
+        string jobName = retrievedAsyncResponse?.Result?.Metadata.Job.Name ?? throw new InvalidOperationException("Job Name is Null");
         return jobName;
     }
 }
