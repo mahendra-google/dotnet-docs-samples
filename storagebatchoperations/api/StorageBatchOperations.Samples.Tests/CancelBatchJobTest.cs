@@ -88,7 +88,7 @@ public class CancelBatchJobTest
         catch (Exception ex)
         {
             // This might be expected if the job name is null in result metadata after polling once.
-            Assert.Equal("Object reference not set to an instance of an object", ex.Message);
+            Assert.Equal("Job Name is Null", ex.Message);
 
         }
     }
@@ -120,7 +120,7 @@ public class CancelBatchJobTest
         Operation<Job, OperationMetadata> retrievedResponse = storageBatchClient.PollOnceCreateJob(operationName);
         // Poll once asynchronously.
         Task<Operation<Job, OperationMetadata>> retrievedAsyncResponse = retrievedResponse.PollOnceAsync();
-        string jobName = retrievedAsyncResponse?.Result?.Metadata.Job.Name;
+        string jobName = retrievedAsyncResponse?.Result?.Metadata?.Job?.Name ?? throw new InvalidOperationException("Job Name is Null");
         return jobName;
     }
 }
