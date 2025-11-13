@@ -29,3 +29,7 @@ The samples requires [.NET Core 3.1][net-core] or later.  That means using
 [Storage]: https://cloud.google.com/storage/docs/
 [enable-api]: https://console.cloud.google.com/flows/enableapi?apiid=storage_api&showconfirmation=true
 [net-core]: https://www.microsoft.com/net/core
+
+## Note
+
+Tests for the Anywhere Cache samples are not included because creating an AnywhereCache can take an extremely long time, sometimes up to 48 hours.
