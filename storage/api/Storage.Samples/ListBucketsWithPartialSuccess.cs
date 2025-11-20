@@ -14,20 +14,21 @@
 
 // [START storage_list_buckets_partial_success]
 
-using Google.Api.Gax;
 using Google.Apis.Storage.v1.Data;
 using Google.Cloud.Storage.V1;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public class ListBucketsWithPartialSuccessSample
 {
     /// <summary>
-    /// List the buckets.
+    /// List the buckets with partial success.
     /// </summary>
     /// <param name="projectId">The ID of the project to list the buckets.</param>
     /// <param name="returnPartialSuccess">If true, the buckets from both reachable and unreachable locations will be listed. The default is false.</param>
-    public PagedEnumerable<Buckets, Bucket> ListBucketsWithPartialSuccess(string projectId = "your-project-id", bool returnPartialSuccess = false)
+    public (IReadOnlyList<Bucket> Reachable, IReadOnlyList<string> Unreachable) ListBucketsWithPartialSuccess
+        (string projectId = "your-project-id", bool returnPartialSuccess = false)
     {
         var storage = StorageClient.Create();
         var pagedResult = storage.ListBuckets(projectId, options: new ListBucketsOptions
@@ -35,8 +36,10 @@ public class ListBucketsWithPartialSuccessSample
             ReturnPartialSuccess = returnPartialSuccess
         });
 
-        // Get all reachable buckets.
-        var reachableBuckets = pagedResult.ToList();
+        var pages = pagedResult.AsRawResponses().ToList();
+
+        // Get all reachable buckets from all pages.
+        var reachableBuckets = pages.SelectMany(page => page.Items ?? Enumerable.Empty<Bucket>()).ToList();
 
         Console.WriteLine("Buckets:");
         foreach (var bucket in reachableBuckets)
@@ -45,11 +48,9 @@ public class ListBucketsWithPartialSuccessSample
         }
 
         // Get all unreachable buckets from all pages into a single list.
-        var unreachableBuckets = pagedResult.AsRawResponses()
-        .SelectMany(page => page?.Unreachable ?? Enumerable.Empty<string>())
-        .ToList();
+        var unreachableBuckets = pages.SelectMany(page => page.Unreachable ?? Enumerable.Empty<string>()).ToList();
 
-        if (unreachableBuckets?.Any() == true)
+        if (unreachableBuckets.Any())
         {
             Console.WriteLine("Unreachable Buckets:");
             foreach (var bucket in unreachableBuckets)
@@ -57,7 +58,7 @@ public class ListBucketsWithPartialSuccessSample
                 Console.WriteLine(bucket);
             }
         }
-        return pagedResult;
+        return (reachableBuckets, unreachableBuckets);
     }
 }
 // [END storage_list_buckets_partial_success]

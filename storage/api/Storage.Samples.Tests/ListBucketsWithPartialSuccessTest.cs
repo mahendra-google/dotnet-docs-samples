@@ -28,22 +28,21 @@ public class ListBucketsWithPartialSuccessTest
     [Fact]
     public void ListBucketsWithPartialSuccess()
     {
-        CreateBucketSample createBucketSample = new CreateBucketSample();
         ListBucketsWithPartialSuccessSample listBucketsPartialSuccessSample = new ListBucketsWithPartialSuccessSample();
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: true, registerForDeletion: true);
 
         var buckets = listBucketsPartialSuccessSample.ListBucketsWithPartialSuccess(_fixture.ProjectId, returnPartialSuccess: true);
-        var reachableBuckets = buckets.ToList();
+
+        var reachableBuckets = buckets.Reachable.ToList();
         Assert.Contains(reachableBuckets, c => c.Name == bucketName);
 
-        var unreachableBuckets = buckets.AsRawResponses()
-        .SelectMany(page => page?.Unreachable ?? Enumerable.Empty<string>())
-        .ToList();
+        var unreachableBuckets = buckets.Unreachable.ToList();
 
-        if (unreachableBuckets?.Any() == true)
+        if (unreachableBuckets.Any())
         {
-            Assert.NotNull(unreachableBuckets);
+            // This indicates that the environment had unreachable buckets.
+            // We don't assert on the count to avoid flaky tests.
         }
     }
 }
