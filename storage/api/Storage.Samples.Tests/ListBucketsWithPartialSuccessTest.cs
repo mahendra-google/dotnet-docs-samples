@@ -30,7 +30,7 @@ public class ListBucketsWithPartialSuccessTest
     {
         ListBucketsWithPartialSuccessSample listBucketsPartialSuccessSample = new ListBucketsWithPartialSuccessSample();
         var bucketName = _fixture.GenerateBucketName();
-        _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: true, registerForDeletion: true);
+        _fixture.CreateBucket(bucketName: bucketName, location: "US", storageClass: "MULTI_REGIONAL");
 
         var buckets = listBucketsPartialSuccessSample.ListBucketsWithPartialSuccess(_fixture.ProjectId, returnPartialSuccess: true);
 
