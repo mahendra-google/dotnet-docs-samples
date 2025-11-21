@@ -28,11 +28,11 @@ public class ListBucketsWithPartialSuccessTest
     [Fact]
     public void ListBucketsWithPartialSuccess()
     {
-        ListBucketsWithPartialSuccessSample listBucketsPartialSuccessSample = new ListBucketsWithPartialSuccessSample();
+        ListBucketsWithPartialSuccessSample partialSample = new ListBucketsWithPartialSuccessSample();
         var bucketName = _fixture.GenerateBucketName();
         _fixture.CreateBucket(bucketName: bucketName, location: "US", storageClass: "MULTI_REGIONAL");
 
-        var buckets = listBucketsPartialSuccessSample.ListBucketsWithPartialSuccess(_fixture.ProjectId, returnPartialSuccess: true);
+        var buckets = partialSample.ListBucketsWithPartialSuccess(_fixture.ProjectId, returnPartialSuccess: true);
 
         var reachableBuckets = buckets.Reachable.ToList();
         Assert.Contains(reachableBuckets, c => c.Name == bucketName);
