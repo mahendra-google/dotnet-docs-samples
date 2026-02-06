@@ -12,35 +12,48 @@
 
 *           @GoogleCloudPlatform/dotnet-samples-reviewers @GoogleCloudPlatform/cloud-samples-infra
 
-bigtable/   @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/dotnet-samples-reviewers
-datastore/  @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/dotnet-samples-reviewers
-firestore/  @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/dotnet-samples-reviewers
-
-cloud-sql/  @GoogleCloudPlatform/cloud-sql-connectors @GoogleCloudPlatform/dotnet-samples-reviewers
-
-storage/          @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/dotnet-samples-reviewers
-storageinsights/  @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/dotnet-samples-reviewers
-storagetransfer/  @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/dotnet-samples-reviewers
-
-spanner/    @GoogleCloudPlatform/api-spanner-dotnet @GoogleCloudPlatform/dotnet-samples-reviewers
-
-dlp/        @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/dotnet-samples-reviewers
+aiplatform/                                     @meteatamel @GoogleCloudPlatform/dotnet-samples-reviewers
+applications/googlehome-meets-dotnetcontainers/ @meteatamel @GoogleCloudPlatform/dotnet-samples-reviewers
+run/                                            @meteatamel @GoogleCloudPlatform/dotnet-samples-reviewers
 
 appengine/flexible/ @GoogleCloudPlatform/serverless-runtimes @GoogleCloudPlatform/dotnet-samples-reviewers
 
-kms/            @GoogleCloudPlatform/dotnet-samples-reviewers
-secretmanager/  @GoogleCloudPlatform/dotnet-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team
-parametermanager/  @GoogleCloudPlatform/dotnet-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team @GoogleCloudPlatform/cloud-parameters-team
+auth/   @GoogleCloudPlatform/cloud-sdk-dotnet-team
 
-applications/googlehome-meets-dotnetcontainers/  @meteatamel @GoogleCloudPlatform/dotnet-samples-reviewers
-run/                                             @meteatamel @GoogleCloudPlatform/dotnet-samples-reviewers
-aiplatform/                                      @meteatamel @GoogleCloudPlatform/dotnet-samples-reviewers
+bigquery/           @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/cloud-sdk-dotnet-team
+bigquery-storage/   @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/cloud-sdk-dotnet-team
+bigtable/           @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/cloud-sdk-dotnet-team
+datastore/          @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/cloud-sdk-dotnet-team
+firestore/          @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/cloud-sdk-dotnet-team
 
-modelarmor/      @GoogleCloudPlatform/dotnet-samples-reviewers @GoogleCloudPlatform/cloud-modelarmor-team
+cloud-sql/  @GoogleCloudPlatform/cloud-sql-connectors @GoogleCloudPlatform/dotnet-samples-reviewers
+
+compute/    @GoogleCloudPlatform/cloud-sdk-dotnet-team
+
+dlp/    @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/dotnet-samples-reviewers
+
+error-reporting/    @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
+logging/            @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
+monitoring/         @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
+trace/              @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
+
+functions/  @GoogleCloudPlatform/cloud-sdk-dotnet-team
+
+genai/  @GoogleCloudPlatform/generative-ai-devrel @GoogleCloudPlatform/dotnet-samples-reviewers
+
+identity-aware-proxy/   @GoogleCloudPlatform/cloud-sdk-dotnet-team
+
+modelarmor/ @GoogleCloudPlatform/cloud-modelarmor-team @GoogleCloudPlatform/dotnet-samples-reviewers
+
+parametermanager/   @GoogleCloudPlatform/cloud-secrets-team @GoogleCloudPlatform/cloud-parameters-team @GoogleCloudPlatform/dotnet-samples-reviewers
+secretmanager/      @GoogleCloudPlatform/cloud-secrets-team @GoogleCloudPlatform/dotnet-samples-reviewers
+
+pubsub/ @GoogleCloudPlatform/cloud-sdk-dotnet-team
 
 retail/ @chenlei1216 @GoogleCloudPlatform/dotnet-samples-reviewers
 
-logging/         @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
-monitoring/      @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
-error-reporting/ @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
-trace/           @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/dotnet-samples-reviewers
+spanner/    @GoogleCloudPlatform/api-spanner-dotnet @GoogleCloudPlatform/cloud-sdk-dotnet-team
+
+storage/            @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/dotnet-samples-reviewers
+storageinsights/    @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/dotnet-samples-reviewers
+storagetransfer/    @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/dotnet-samples-reviewers
