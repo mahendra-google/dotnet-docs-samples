@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Google Inc.
+// Copyright 2021 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Xunit;
 
@@ -37,21 +38,24 @@ public class DeleteFileArchivedGenerationTest
         DeleteFileArchivedGenerationSample deleteFileArchivedGenerationSample = new DeleteFileArchivedGenerationSample();
         BucketDisableVersioningSample bucketDisableVersioningSample = new BucketDisableVersioningSample();
 
-        var objectName = "HelloDeleteFileArchivedGeneration.txt";
+        var bucketName = _fixture.GenerateBucketName();
+        _fixture.CreateBucket(bucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
+        var objectName = $"{_fixture.GenerateName()}.txt";
 
         // Enable bucket versioning
-        bucketEnableVersioningSample.BucketEnableVersioning(_fixture.BucketNameGeneric);
+        bucketEnableVersioningSample.BucketEnableVersioning(bucketName);
 
         // Uploaded for the first time
-        uploadFileSample.UploadFile(_fixture.BucketNameGeneric, _fixture.FilePath, objectName);
+        uploadFileSample.UploadFile(bucketName, _fixture.FilePath, objectName);
 
         // Upload again to archive previous generation.
-        uploadFileSample.UploadFile(_fixture.BucketNameGeneric, "Resources/HelloDownloadCompleteByteRange.txt", objectName);
+        uploadFileSample.UploadFile(bucketName, "Resources/HelloDownloadCompleteByteRange.txt", objectName);
 
 
         try
         {
-            var objects = listFileArchivedGenerationSample.ListFileArchivedGeneration(_fixture.BucketNameGeneric);
+            var objects = listFileArchivedGenerationSample.ListFileArchivedGeneration(bucketName);
 
             Assert.Equal(2, objects.Count(a => a.Name == objectName));
 
@@ -61,21 +65,21 @@ public class DeleteFileArchivedGenerationTest
             long? fileCurrentGeneration = testFiles[1].Generation;
 
             // Delete first generation of the file
-            deleteFileArchivedGenerationSample.DeleteFileArchivedGeneration(_fixture.BucketNameGeneric, objectName, fileArchivedGeneration);
+            deleteFileArchivedGenerationSample.DeleteFileArchivedGeneration(bucketName, objectName, fileArchivedGeneration);
 
-            objects = listFileArchivedGenerationSample.ListFileArchivedGeneration(_fixture.BucketNameGeneric);
+            objects = listFileArchivedGenerationSample.ListFileArchivedGeneration(bucketName);
             Assert.Equal(1, objects.Count(a => a.Name == objectName));
 
             // Delete second generation of the file
-            deleteFileArchivedGenerationSample.DeleteFileArchivedGeneration(_fixture.BucketNameGeneric, objectName, fileCurrentGeneration);
+            deleteFileArchivedGenerationSample.DeleteFileArchivedGeneration(bucketName, objectName, fileCurrentGeneration);
 
-            objects = listFileArchivedGenerationSample.ListFileArchivedGeneration(_fixture.BucketNameGeneric);
+            objects = listFileArchivedGenerationSample.ListFileArchivedGeneration(bucketName);
             Assert.Equal(0, objects.Count(a => a.Name == objectName));
         }
         finally
         {
             // Disable bucket versioning
-            bucketDisableVersioningSample.BucketDisableVersioning(_fixture.BucketNameGeneric);
+            bucketDisableVersioningSample.BucketDisableVersioning(bucketName);
         }
     }
 }

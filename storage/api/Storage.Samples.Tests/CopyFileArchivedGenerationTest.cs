@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Google Inc.
+// Copyright 2021 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.IO;
 using Xunit;
 
@@ -36,38 +35,44 @@ public class CopyFileArchivedGenerationTest
         CopyFileArchivedGenerationSample copyFileArchivedGenerationSample = new CopyFileArchivedGenerationSample();
         BucketDisableVersioningSample bucketDisableVersioningSample = new BucketDisableVersioningSample();
 
-        var objectName = Guid.NewGuid().ToString() +".txt";
-        var copiedObjectName = Guid.NewGuid().ToString() + ".txt";
+        var sourceBucketName = _fixture.GenerateBucketName();
+        _fixture.CreateBucket(sourceBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
+        var destinationBucketName = _fixture.GenerateBucketName();
+        _fixture.CreateBucket(destinationBucketName, multiVersion: false, softDelete: false, registerForDeletion: true);
+
+        var objectName =$"{_fixture.GenerateName()}.txt";
+        var copiedObjectName = $"{_fixture.GenerateName()}.txt";
 
         // Enable bucket versioning
-        bucketEnableVersioningSample.BucketEnableVersioning(_fixture.BucketNameGeneric);
+        bucketEnableVersioningSample.BucketEnableVersioning(sourceBucketName);
 
         // Uploaded for the first time
-        uploadFileSample.UploadFile(_fixture.BucketNameGeneric, _fixture.FilePath, objectName);
+        uploadFileSample.UploadFile(sourceBucketName, _fixture.FilePath, objectName);
 
         // Get generation of first version of the file
-        var obj = getMetadataSample.GetMetadata(_fixture.BucketNameGeneric, objectName);
+        var obj = getMetadataSample.GetMetadata(sourceBucketName, objectName);
         var fileArchivedGeneration = obj.Generation;
 
         // Upload again to archive previous generation.
-        uploadFileSample.UploadFile(_fixture.BucketNameGeneric, "Resources/HelloDownloadCompleteByteRange.txt", objectName);
+        uploadFileSample.UploadFile(sourceBucketName, "Resources/HelloDownloadCompleteByteRange.txt", objectName);
 
         // Get generation of second version of the file
-        obj = getMetadataSample.GetMetadata(_fixture.BucketNameGeneric, objectName);
+        obj = getMetadataSample.GetMetadata(sourceBucketName, objectName);
         var fileCurrentGeneration = obj.Generation;
 
 
-        _fixture.CollectArchivedFiles(_fixture.BucketNameGeneric, objectName, fileArchivedGeneration);
-        _fixture.CollectArchivedFiles(_fixture.BucketNameGeneric, objectName, fileCurrentGeneration);
+        _fixture.CollectArchivedFiles(sourceBucketName, objectName, fileArchivedGeneration);
+        _fixture.CollectArchivedFiles(sourceBucketName, objectName, fileCurrentGeneration);
 
         try
         {
             // Copy first version of the file to new bucket.
-            copyFileArchivedGenerationSample.CopyFileArchivedGeneration(_fixture.BucketNameGeneric, objectName,
-                _fixture.BucketNameRegional, _fixture.CollectRegionalObject(copiedObjectName), fileArchivedGeneration);
+            copyFileArchivedGenerationSample.CopyFileArchivedGeneration(sourceBucketName, objectName,
+                destinationBucketName, copiedObjectName, fileArchivedGeneration);
 
             // Download copied file
-            downloadFileSample.DownloadFile(_fixture.BucketNameRegional, copiedObjectName, copiedObjectName);
+            downloadFileSample.DownloadFile(destinationBucketName, copiedObjectName, copiedObjectName);
 
             // Match file contents with first version of the file
             Assert.Equal(File.ReadAllText(_fixture.FilePath), File.ReadAllText(copiedObjectName));
@@ -77,7 +82,7 @@ public class CopyFileArchivedGenerationTest
             File.Delete(copiedObjectName);
 
             // Disable bucket versioning
-            bucketDisableVersioningSample.BucketDisableVersioning(_fixture.BucketNameGeneric);
+            bucketDisableVersioningSample.BucketDisableVersioning(sourceBucketName);
         }
     }
 }
